@@ -1,0 +1,19 @@
+.landing_login_btn{
+    background: linear-gradient(#fd749bc4,#281ac8b8);
+    border-radius: 10px;
+    color: white;
+    padding: 5px 30px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+}
+.nav-item .nav-link{
+    color: black;
+    border-bottom: 3px solid transparent;
+    font-weight: 700;
+    padding-bottom: 0;
+}
+.nav-link.active{
+    border-bottom: 3px solid #fd749bc4;
+}

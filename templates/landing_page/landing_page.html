@@ -1,0 +1,16 @@
+{% extends "partials/landing_base.html" %}
+{% load static %}
+
+{% block head_title %}
+    Onboarding
+{% endblock head_title %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'assets/css/landing/landing.css' %}">
+{% endblock stylesheet %}
+
+{% block content %}
+
+{% include 'includes/navbar.html' %}
+
+{% endblock content %}
