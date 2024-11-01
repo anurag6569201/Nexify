@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head_title %}
-    Onboarding
+Onboarding
 {% endblock head_title %}
 
 {% block stylesheet %}
@@ -27,4 +27,94 @@
     </div>
 </div>
 
+<div class="container" id="landing_about">
+    <div class="row landing_about_first">
+        <div class="col-md-12">
+            <h1 class="landing_about_title">About Nexify</h1>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        At Nexify, we are committed to revolutionizing how clubs, societies, and organizations approach
+                        member engagement and accountability. Born from a desire to bridge gaps in responsibility
+                        management and participation, Nexify offers a platform designed to streamline workflows, enhance
+                        transparency, and promote sustained engagement.
+                    </p>
+                    <p>
+                        Organizations often face challenges in tracking member contributions and progress, which can
+                        impact both productivity and morale. Nexify addresses this by providing a comprehensive system
+                        for real-time tracking of tasks, responsibilities, and member interactions, ensuring that
+                        everyone stays informed, engaged, and motivated. Our tools help organizations build a culture of
+                        accountability, driving members to take ownership of their roles and contribute meaningfully to
+                        shared goals.
+                    </p>
+                    <p>
+                        By combining advanced features with an intuitive interface, Nexify is committed to helping
+                        organizations foster an environment where every contribution matters. We’re here to empower
+                        clubs and societies to operate more effectively, focusing on their core mission without the
+                        administrative hassle. Join us on a journey to transform organizational dynamics, improve member
+                        experiences, and make each interaction purposeful and impactful.
+                    </p>
+                </div>
+                <div class="col-md-6 landing_about_image">
+                    <img src="{% static 'assets/img/landing/about.svg' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-5" id="landing_contact">
+    <div class="row">
+        <div class="col-md-6 contact-info">
+            <img src="{% static 'assets/img/landing/contact.svg' %}" alt="">
+        </div>
+
+        <div class="col-md-6 contact-form">
+            <h2>Contact Us</h2>
+            <form>
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Enter your Name" required>
+                </div>
+                <div class="mb-3">
+                    <input type="email" class="form-control" placeholder="Enter a valid email address" required>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" rows="3" placeholder="Your Message" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Submit</button>
+            </form>
+            <hr style="background-color: black;">
+            <div class="landing_contact_details mt-4">
+                <div class="contact_details_card">
+                    <strong>Email:</strong><br>
+                    <a href="mailto:info@nexify.com">info@nexify.com</a>
+                </div>
+                <div class="contact_details_card">
+                    <strong>Phone:</strong><br>
+                    (123) 456-7890
+                </div>
+                <div class="contact_details_card">
+                    <strong>Address:</strong><br>
+                    123 Main St, Anytown, USA
+                </div>
+                <div class="contact_details_card">
+                    <strong>Hours:</strong><br>
+                    Monday - Friday: 9:00 AM - 5:00 PM
+                    Saturday: 9:00 AM - 3:00 PM
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="landing_footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 p-3">
+                <h5 class="text-center">Copyright © 2024 Nexify. All rights reserved.</h5>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
