@@ -12,7 +12,7 @@ body {
   border-radius: 10px;
   padding: 1rem 0;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.03);
-  height: calc(100vh - 4rem);
+  height: calc(100vh - 2rem);
 }
 .navbar__link {
   position: relative;
@@ -1130,4 +1130,8 @@ body {
 }
 .navbar__link:hover svg{
     color: rgb(189, 185, 185) !important;
+}
+.main_container_of_pages{
+    padding-left: 7.5rem;
+    padding-top: 1rem;
 }
