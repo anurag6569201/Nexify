@@ -9,6 +9,9 @@
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <div class="login_landing_btn">
+      <button onclick="window.location.href='{% url 'account_email' %}'"  class="landing_login_btn" type="button">Login</button>
+    </div>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="width: 100%;justify-content: center;gap: 25px;">
         <li class="nav-item">
@@ -22,27 +25,8 @@
         </li>
       </ul>
       <form class="d-flex">
-        <button class="landing_login_btn" type="button">Login</button>
+        <button onclick="window.location.href='{% url 'account_email' %}'"  class="landing_login_btn" type="button">Login</button>
       </form>
     </div>
   </div>
 </nav>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
-
-    // Function to handle click and add 'active' class to the clicked link
-    function handleClick(event) {
-      // Remove 'active' from all links
-      navLinks.forEach((link) => link.classList.remove("active"));
-      
-      // Add 'active' to the clicked link
-      event.target.classList.add("active");
-    }
-
-    // Add event listener to each nav link
-    navLinks.forEach((link) => {
-      link.addEventListener("click", handleClick);
-    });
-  });
-</script>
