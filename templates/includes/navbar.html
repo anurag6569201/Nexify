@@ -12,13 +12,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="width: 100%;justify-content: center;gap: 25px;">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#home">Home</a>
+          <a class="nav-link active" aria-current="page" href="#landing">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#about">About Us</a>
+          <a class="nav-link" aria-current="page" href="#landing_about">About Us</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#contact">Contact Us</a>
+          <a class="nav-link" aria-current="page" href="#landing_contact">Contact Us</a>
         </li>
       </ul>
       <form class="d-flex">
@@ -28,24 +28,21 @@
   </div>
 </nav>
 <script>
-  document.addEventListener("scroll", function () {
-    const sections = document.querySelectorAll("section");
+  document.addEventListener("DOMContentLoaded", function () {
     const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
 
-    sections.forEach((section) => {
-      const sectionTop = section.offsetTop - 100;
-      const sectionHeight = section.offsetHeight;
+    // Function to handle click and add 'active' class to the clicked link
+    function handleClick(event) {
+      // Remove 'active' from all links
+      navLinks.forEach((link) => link.classList.remove("active"));
+      
+      // Add 'active' to the clicked link
+      event.target.classList.add("active");
+    }
 
-      if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-        const id = section.getAttribute("id");
-
-        navLinks.forEach((link) => {
-          link.classList.remove("active");
-          if (link.getAttribute("href").includes(id)) {
-            link.classList.add("active");
-          }
-        });
-      }
+    // Add event listener to each nav link
+    navLinks.forEach((link) => {
+      link.addEventListener("click", handleClick);
     });
   });
 </script>

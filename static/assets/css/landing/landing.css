@@ -70,10 +70,7 @@ body {
 
 /* Contact Info Section Styling */
 #landing_contact {
-    background-color: #b82f8d;
-    /* Brand color */
     color: white;
-    padding: 2rem;
 }
 
 /* Contact Form Section Styling */
@@ -119,13 +116,16 @@ body {
 }
 
 .landing_footer {
-    background-color: #b82f8d;
     border-radius: none;
     color: white;
 }
-
+.contact-info{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .contact-info img {
-    height: min-content;
+    height: 50vh;
 }
 
 .landing_contact_details {

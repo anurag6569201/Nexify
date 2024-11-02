@@ -12,7 +12,7 @@ Onboarding
 {% block content %}
 
 {% include 'includes/navbar.html' %}
-<div class="container-fluid" id="landing">
+<div class="container-fluid section" id="landing">
     <div class="row">
         <div class="col-md-12 landing_title">
             <h1>Welcome to Nexify</h1>
@@ -27,7 +27,7 @@ Onboarding
     </div>
 </div>
 
-<div class="container" id="landing_about">
+<div class="container section" id="landing_about">
     <div class="row landing_about_first">
         <div class="col-md-12">
             <h1 class="landing_about_title">About Nexify</h1>
@@ -63,7 +63,7 @@ Onboarding
     </div>
 </div>
 
-<div class="container-fluid mt-5" id="landing_contact">
+<div class="container mt-5 section" id="landing_contact">
     <div class="row">
         <div class="col-md-6 contact-info">
             <img src="{% static 'assets/img/landing/contact.svg' %}" alt="">
@@ -83,27 +83,6 @@ Onboarding
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Submit</button>
             </form>
-            <hr style="background-color: black;">
-            <div class="landing_contact_details mt-4">
-                <div class="contact_details_card">
-                    <strong>Email:</strong><br>
-                    <a href="mailto:info@nexify.com">info@nexify.com</a>
-                </div>
-                <div class="contact_details_card">
-                    <strong>Phone:</strong><br>
-                    (123) 456-7890
-                </div>
-                <div class="contact_details_card">
-                    <strong>Address:</strong><br>
-                    123 Main St, Anytown, USA
-                </div>
-                <div class="contact_details_card">
-                    <strong>Hours:</strong><br>
-                    Monday - Friday: 9:00 AM - 5:00 PM
-                    Saturday: 9:00 AM - 3:00 PM
-                </div>
-
-            </div>
         </div>
     </div>
 </div>
