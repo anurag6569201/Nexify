@@ -46,6 +46,8 @@ INSTALLED_APPS = [
 
     'landing_page',
     'home',
+
+    'markdownify' #markdown readme
 ]
 
 MIDDLEWARE = [
@@ -159,3 +161,24 @@ EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 LOGIN_REDIRECT_URL = '/home/'
+
+
+
+
+# settings.py
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_TAGS": [
+            "a", "abbr", "acronym", "b", "blockquote", "code", "em", "i", "li",
+            "ol", "strong", "ul", "p", "h1", "h2", "h3", "pre"
+        ],
+        "WHITELIST_ATTRS": ["href", "title"],
+        "WHITELIST_STYLES": ["color", "font-weight"],
+        "MARKDOWN_EXTENSIONS": [
+            "markdown.extensions.fenced_code",
+            "markdown.extensions.codehilite",
+        ],
+        "STRIP": True,  # Strips all HTML tags that are not whitelisted
+        "SAFE_MODE": True,
+    }
+}

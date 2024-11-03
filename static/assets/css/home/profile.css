@@ -1,0 +1,34 @@
+.section_profile{
+    padding-right: 1rem;
+}
+.section_profile_right{
+    border: 1px solid #a19f9f;
+    padding: 1rem;
+    border-radius: 5px;
+    position: relative;
+}
+.readme-content{
+    width: 100%;
+}
+.edit_readme_btn{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #b82f8d;
+    color: white;
+}
+.edit_readme_btn:hover{
+    background-color: #299afd;
+    color: #fff;
+}
+.profile_image{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile_image img{
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 2px solid #a19f9f;
+}
