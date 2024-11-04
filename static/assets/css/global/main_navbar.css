@@ -8,11 +8,12 @@ body {
   position: fixed;
   top: 1rem;
   left: 1rem;
-  background: #299afd;
+  background: #0c1117;
   border-radius: 10px;
   padding: 1rem 0;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.03);
   height: calc(100vh - 2rem);
+  z-index: 1000;
 }
 .navbar__link {
   position: relative;
@@ -47,6 +48,7 @@ body {
 .navbar__menu {
   position: relative;
 }
+.navbar__item__new__background,
 .navbar__item:last-child:before {
   content: "";
   position: absolute;
@@ -59,6 +61,14 @@ body {
   background: #0872d0;
   border-radius: 17.5px;
   transition: 250ms cubic-bezier(1, 0.2, 0.1, 1.2) all;
+}
+.navbar__item__new__background{
+  position: relative;
+  opacity: 1;
+  z-index: 1000;
+}
+.navbar__item__new__background .navbar__link{
+  left: -1rem;
 }
 .navbar__item:first-child:nth-last-child(1):hover ~ li:last-child:before, .navbar__item:first-child:nth-last-child(1) ~ li:hover ~ li:last-child:before {
   opacity: 1;
@@ -1134,4 +1144,7 @@ body {
 .main_container_of_pages{
     padding-left: 7.5rem;
     padding-top: 1rem;
+}
+hr{
+  opacity: 1 !important;
 }
