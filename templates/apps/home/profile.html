@@ -16,8 +16,16 @@
     <div class="row" style="padding: 1rem;padding-top: 0;">
         <div class="col-md-4 section_profile_left">
             <div class="profile_image">
+                {% if user_profile_data.background_picture %}
                 <img class="profile_background_image" src="{{ user_profile_data.background_picture.url }}" alt="">
-                <img class="profile_image_pic" src="{{ user_profile_data.profile_picture.url }}" alt="">
+                {% else %}
+                <img class="profile_background_image" src="" alt="background_image" style="background-color: grey;">
+                {% endif %}
+                {% if user_profile_data.background_picture %}
+                <img class="profile_image_pic" src="{{ user_profile_data.profile_picture.url }}" alt="" >
+                {% else %}
+                <img class="profile_image_pic" src="" alt="profile_image" style="background-color: black;">
+                {% endif %}
             </div>
             <p>
                 <b style="font-size: x-large;">{{ user_profile_data.name }}</b><br>
@@ -101,9 +109,7 @@
             
             <a href="{% url 'home:readme_edit' %}" class="btn edit_readme_btn">Edit README</a>
         </div>
-        can
     </div>
 </section>
-
 
 {% endblock pages %}

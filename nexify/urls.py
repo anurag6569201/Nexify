@@ -25,6 +25,7 @@ urlpatterns = [
 
     path('',include('landing_page.urls')),
     path('home/',include('home.urls')),
+    path('club/',include('club.urls')),
 ]
 
 if settings.DEBUG:
