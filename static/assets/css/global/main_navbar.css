@@ -1156,3 +1156,6 @@ hr{
   border-radius: 1rem;
   width: 6px !important;
 }
+:focus-visible {
+  outline: transparent auto 1px !important;
+}

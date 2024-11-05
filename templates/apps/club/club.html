@@ -186,8 +186,11 @@
     function init() {
       myDiagram = new go.Diagram('myDiagramDiv', {
         allowCopy: false,
+        scrollMode: go.Diagram.InfiniteScroll,
         allowDelete: false,
+        contentAlignment: go.Spot.Center,
         initialAutoScale: go.AutoScale.UniformToFill,
+        "panningTool.isEnabled": true,
         maxSelectionCount: 1, // users can select only one part at a time
         validCycle: go.CycleMode.DestinationTree, // make sure users can only create trees
         'clickCreatingTool.archetypeNodeData': {
@@ -210,13 +213,13 @@
           treeStyle: go.TreeStyle.LastParents,
           arrangement: go.TreeArrangement.Horizontal,
           // properties for most of the tree:
-          angle: 0,
-          layerSpacing: 50,
+          angle: 90,
+          layerSpacing: 150,
           // properties for the "last parents":
           alternateAngle: 90,
-          alternateLayerSpacing: 35,
+          alternateLayerSpacing: 110,
           alternateAlignment: go.TreeAlignment.Ho,
-          alternateNodeSpacing: 20
+          alternateNodeSpacing: 40
         }),
         'undoManager.isEnabled': true, // enable undo & redo
         'themeManager.changesDivBackground': true,
@@ -456,7 +459,6 @@
                     defaultColumnSeparatorStrokeWidth: 0.5
                   })
                     .theme('defaultColumnSeparatorStroke', 'divider')
-                    .add(makeBottomButton('EMAIL'), makeBottomButton('PHONE'))
                 )
             ), // end Auto Panel
           new go.Shape('RoundedLeftRectangle', {
