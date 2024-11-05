@@ -9,6 +9,7 @@
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'assets/css/club/club.css' %}">
 <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
   :modal {
     padding: 2rem;
@@ -33,25 +34,27 @@
     overflow-x: hidden;
     padding-right: 1rem;
   }
-  #sample{
-    position: relative;
-  }
-  #myInspector{
-    position: absolute;
-    top: .7rem;
-    left: .7rem;
-    background-color: #111827;
-    padding: .5rem;
+  .search_box_of_club{
+    top: 0;
+    left: 0;
+    background-color: #0c1117;
     border-radius: .5rem;
     color: white;
     border: 1px solid black;
     z-index: 100;
+  }
+  #myInspector{
+    position: absolute;
+    bottom: 1rem;
+    left:1rem;
+    right: 1rem;
   }
   #myInspector input{
     background-color: rgba(255, 255, 255, 0.073);
     color: white;
     border: 1px solid black;
     border-radius: 5px;
+    padding: .1rem .4rem;
   }
   #sample{
     color: white;
@@ -85,26 +88,63 @@
 {% endblock stylesheet %}
 {% block pages %}
 
-<div class="row">
-
-<div class="col-md-12">
     <div id="allSampleContent">
-
+        
         <div id="sample">
-            <div id="myDiagramDiv" style="border: solid 1px black; height: calc(100vh - 2rem);width: 100%;"></div>
-            <div style="display: flex;gap: 1rem;margin-top: 1rem;position: absolute;bottom: 3rem;left: 1rem;">
-                <select id="theme" onchange="changeTheme()">
-                    <option value="system">System</option>
-                    <option value="light" >Light</option>
-                    <option value="dark" selected="">Dark</option>
-                </select><button id="zoomToFit">Zoom to Fit</button> <button id="centerRoot">Center on root</button><button id="SaveButton" onclick="save()">Save</button>
-                <button id="load_btn" onclick="load()">Load</button>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="search_box_of_club" style="position: relative;">
+                  <div id="myInspector"></div>
+                  <div class="group">
+                    <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><g><path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path></g></svg>
+                    <input placeholder="Search Clubs..." type="search" class="input">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-9" style="position: relative;padding-left: 0;">
+                <div id="myDiagramDiv" style="border: solid 1px black; height: calc(100vh - 2rem);width: 100%;">
+                </div>
+                <div style="display: flex;gap: 1rem;margin-top: 1rem;position: absolute;bottom: 1rem;left: 1rem;">
+                  <select id="theme" onchange="changeTheme()">
+                      <option value="system">System</option>
+                      <option value="light" >Light</option>
+                      <option value="dark" selected="">Dark</option>
+                  </select><button id="zoomToFit">Zoom to Fit</button> <button id="centerRoot">Center on root</button>                  <form id="jsonDataForm" method="post" action="{% url 'club:edit_json_data' club_data_pk %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button id="SaveButton" class="save_and_edit_data" type="button" onclick="save()">Save</button>
+                </form>
+                  <button id="load_btn" onclick="load()">Load</button>
+              </div>
+              </div>
             </div>
             <div>
-                <div id="myInspector"></div>
             </div>
             <div>
-                <textarea id="mySavedModel" style="width: 100%; height: 270px;display: none;">{ "class": "go.TreeModel",
+            
+            <script>
+                function save() {
+                    // Set the JSON data before submitting
+                    document.getElementById('id_json_data').value = myDiagram.model.toJson();
+                    myDiagram.isModified = false;
+            
+                    // Prepare the AJAX request
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#jsonDataForm').attr('action'),  // Use the action attribute from the form
+                        data: $('#jsonDataForm').serialize(),  // Serialize the form data
+                        success: function(response) {
+                            alert(response.message); // Show success message
+                        },
+                        error: function(xhr) {
+                            alert(xhr.responseJSON.message); // Show error message
+                        }
+                    });
+                }
+            </script>
+            
+            
+                <!-- <textarea id="id_json_data" style="width: 100%; height: 270px;display: none;">{ "class": "go.TreeModel",
     "nodeDataArray": [
     {"key":1, "name":"Stella Payne Diaz", "title":"CEO", "dept": "Management", "pic":"1.jpg", "email": "sdiaz@example.com", "phone": "(234) 555-6789" },
     {"key":2, "name":"Luke Warm", "title":"VP Marketing/Sales", "dept": "Management", "pic":"2.jpg", "email": "lwarm@example.com", "phone": "(234) 555-6789", "parent":1},
@@ -124,7 +164,8 @@
     {"key":16, "name":"Lotta B. Essen", "title":"Sales Rep", "dept": "Sales", "pic":"16.jpg", "email": "lessen@example.com", "phone": "(234) 555-6789", "parent":3}
     ]
     }
-    </textarea>
+    
+    </textarea> -->
             </div>
             <dialog>
                 <div style="display: flex; flex-direction: column">
@@ -137,8 +178,6 @@
     
     
     </div>
-</div>
-</div>
 
 {% block extra_body %}
 <script src="https://cdn.jsdelivr.net/npm/gojs@3.0.13/release/go.js"></script>
@@ -171,12 +210,12 @@
           treeStyle: go.TreeStyle.LastParents,
           arrangement: go.TreeArrangement.Horizontal,
           // properties for most of the tree:
-          angle: 90,
-          layerSpacing: 35,
+          angle: 0,
+          layerSpacing: 50,
           // properties for the "last parents":
           alternateAngle: 90,
           alternateLayerSpacing: 35,
-          alternateAlignment: go.TreeAlignment.Bus,
+          alternateAlignment: go.TreeAlignment.Ho,
           alternateNodeSpacing: 20
         }),
         'undoManager.isEnabled': true, // enable undo & redo
@@ -523,7 +562,7 @@
         .add(
           go.GraphObject.build('ContextMenuButton', {
             click: (e, button) => addEmployee(button.part.adornedPart)
-          }).add(new go.TextBlock('Add Employee')),
+          }).add(new go.TextBlock('Add Society')),
           go.GraphObject.build('ContextMenuButton', {
             click: (e, button) => {
               const node = button.part.adornedPart;
@@ -575,7 +614,7 @@
         corner: 5
       }).add(new go.Shape({ strokeWidth: 2 }).theme('stroke', 'link')); // the link shape
   
-      // read in the JSON-format data from the "mySavedModel" element
+      // read in the JSON-format data from the "id_json_data" element
       load();
   
       // support editing the properties of the selected person in HTML
@@ -599,13 +638,9 @@
       });
     } // end init
   
-    // Show the diagram's model in JSON format
-    function save() {
-      document.getElementById('mySavedModel').value = myDiagram.model.toJson();
-      myDiagram.isModified = false;
-    }
+
     function load() {
-      myDiagram.model = go.Model.fromJson(document.getElementById('mySavedModel').value);
+      myDiagram.model = go.Model.fromJson(document.getElementById('id_json_data').value);
       // make sure new data keys are unique positive integers
       let lastkey = 1;
       myDiagram.model.makeUniqueKeyFunction = (model, data) => {
