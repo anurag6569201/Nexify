@@ -73,3 +73,12 @@
     right:-5rem;
     z-index: 1000;
 }
+#treeTable_length{
+    display: none !important;
+}
+#treeTable_filter input{
+    color: white;
+}
+#treeTable_wrapper{
+    max-height: 60vh;
+}

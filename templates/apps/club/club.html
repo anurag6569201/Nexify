@@ -9,7 +9,9 @@
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'assets/css/club/club.css' %}">
 <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 <style>
   :modal {
     padding: 2rem;
@@ -95,10 +97,106 @@
               <div class="col-md-3">
                 <div class="search_box_of_club" style="position: relative;">
                   <div id="myInspector"></div>
-                  <div class="group">
-                    <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><g><path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path></g></svg>
-                    <input placeholder="Search Clubs..." type="search" class="input">
-                  </div>
+                  <table id="treeTable" class="display">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Organization</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Data rows will be inserted here dynamically -->
+                    </tbody>
+                  </table>
+                
+                  <script>
+                    $(document).ready(function() {
+                      var data = [
+                        { "class": "TreeModel", "nodeDataArray": [
+                            {"key":1,"name":"IIIT BHUBANESWAR","title":"College","dept":"Management","pic":"1.jpg","email":"sdiaz@example.com","phone":"(234) 555-6789"},
+                            {"name":"TECH SOCIETY","title":"technology","dept":"Management","parent":1,"key":7},
+                            {"name":"MESS SOCIETY","title":"foody","dept":"Management","parent":1,"key":25},
+                            {"name":"TARS SOCIETY","title":"robotics","dept":"Management","parent":1,"key":2},
+                            {"name":"PSOC","title":"programming","dept":"Management","parent":7,"key":3},
+                            {"name":"GDG","title":"cloud","dept":"Management","parent":7,"key":4},
+                            {"name":"WEB DEV","title":"website","dept":"Management","parent":3,"key":5},
+                            {"name":"APP DEV","title":"app","dept":"Management","parent":3,"key":6},
+                            {"name":"GAME DEV","title":"Games","dept":"Management","parent":3,"key":8},
+                            {"name":"GOOGLE","title":"gc","dept":"Management","parent":4,"key":11},
+                            {"name":"AMAZON","title":"aws","dept":"Management","parent":4,"key":12},
+                            {"name":"MICROSOFT","title":"azure","dept":"Management","parent":4,"key":13},
+                            {"name":"1ST FLOOR","title":"mess","dept":"Management","parent":25,"key":14},
+                            {"name":"2ND FLOOR","title":"mess","dept":"Management","parent":25,"key":15},
+                            {"name":"CONTENT","title":"advertise","dept":"Management","parent":2,"key":16},
+                            {"name":"HARDWARE","title":"building","dept":"Management","parent":2,"key":17},
+                            {"name":"SOFTWARE","title":"coding","dept":"Management","parent":2,"key":18}
+                          ]
+                        },
+                        { "class": "TreeModel", "nodeDataArray": [
+                            {"key":1,"name":"JOGGING","title":"joggers","dept":"Management","pic":"1.jpg","email":"sdiaz@example.com","phone":"(234) 555-6789"},
+                            {"name":"STARVA","title":"starva jogging","dept":"Management","parent":1,"key":2},
+                            {"name":"JOGGER SPECIAL","title":"jogiers","dept":"Management","parent":1,"key":3},
+                            {"name":"GROUP1","title":"people","dept":"Management","parent":2,"key":4},
+                            {"name":"GROUP2","title":"people","dept":"Management","parent":3,"key":5},
+                            {"name":"GROUP3","title":"people","dept":"Management","parent":3,"key":6}
+                          ]
+                        }
+                      ];
+                
+                      // Create an array to hold the flattened data for the DataTable
+                      var tableData = [];
+                
+                      // Function to find the Organization node
+                      function findMostParent(item, dataMap) {
+                        let current = item;
+                        while (current.parent) {
+                          current = dataMap[current.parent];
+                          if (!current) break; // If there's no parent, exit
+                        }
+                        return current ? current.name : ''; // Return the name of the Organization node
+                      }
+                
+                      // Function to flatten the hierarchical data
+                      function flattenData(dataArray) {
+                        var dataMap = {};
+                
+                        // Create a map for quick lookup
+                        dataArray.forEach(item => {
+                          dataMap[item.key] = item;
+                        });
+                
+                        // Loop through the items to create flattened data
+                        dataArray.forEach(item => {
+                          var mostParentName = findMostParent(item, dataMap);
+                          // Push the flattened data into tableData
+                          tableData.push([
+                            item.name || '',
+                            mostParentName // Add Organization name to the last column
+                          ]);
+                        });
+                      }
+                
+                      // Iterate over both classes of data and flatten them
+                      data.forEach(tree => {
+                        if (tree.nodeDataArray) {
+                          flattenData(tree.nodeDataArray);
+                        }
+                      });
+                
+                      // Initialize DataTable
+                      $('#treeTable').DataTable({
+                        data: tableData,
+                        columns: [
+                          { title: "Name" },
+                          { title: "Organization" }
+                        ],
+                        paging: true,
+                        searching: true,  // Enable search functionality
+                        order: [[0, 'asc']],  // Sorting by the name column
+                      });
+                    });
+                  </script>
+                 
                 </div>
               </div>
               <div class="col-md-9" style="position: relative;padding-left: 0;">
@@ -109,7 +207,8 @@
                       <option value="system">System</option>
                       <option value="light" >Light</option>
                       <option value="dark" selected="">Dark</option>
-                  </select><button id="zoomToFit">Zoom to Fit</button> <button id="centerRoot">Center on root</button>                  <form id="jsonDataForm" method="post" action="{% url 'club:edit_json_data' club_data_pk %}">
+                  </select><button id="zoomToFit">Zoom to Fit</button> <button id="centerRoot">Center on root</button>                  
+                  <form id="jsonDataForm" method="post" action="{% url 'club:edit_json_data' club_data_pk %}">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button id="SaveButton" class="save_and_edit_data" type="button" onclick="save()">Save</button>

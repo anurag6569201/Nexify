@@ -5,11 +5,14 @@ from django.http import JsonResponse
 
 def club(request):
     club_data, created = ClubData.objects.get_or_create(user=request.user)  # Assuming you have a `user` field
+
+    global_club_data = ClubData.objects.all()
     form = ClubDataForm(instance=club_data)
     
     context = {
         'form': form,
         'club_data_pk': club_data.pk,
+        'global_club_data':global_club_data,
     }
     return render(request, 'apps/club/club.html', context)
 

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Forms UI Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .form-container {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .form-title, .form-description {
+            margin-bottom: 20px;
+        }
+        .form-title input, .form-description textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .question-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .question-container h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: normal;
+        }
+        .question-container input[type="text"], .question-container select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .add-option {
+            margin-top: 5px;
+            color: #4285f4;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .add-question, .save-form {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4285f4;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .save-form {
+            background-color: #34a853;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form id="form" method="POST" action="{% url 'event:save_form' %}">
+            {% csrf_token %}
+            <div class="form-title">
+                <label for="form-title">Form Title</label>
+                <input type="text" id="form-title" name="title" placeholder="Untitled form" required>
+            </div>
+            <div class="form-description">
+                <label for="form-description">Form Description</label>
+                <textarea id="form-description" name="description" rows="3" placeholder="Form description" required></textarea>
+            </div>
+
+            <!-- Container where questions will be dynamically added -->
+            <div id="questions-container">
+                <!-- Initial Question Template -->
+                <div class="question-container">
+                    <h3>Question 1</h3>
+                    <input type="text" name="questions[0][text]" placeholder="Enter your question" required>
+                    <select name="questions[0][question_type]" onchange="handleQuestionTypeChange(this)">
+                        <option value="short-answer">Short Answer</option>
+                        <option value="paragraph">Paragraph</option>
+                        <option value="multiple-choice">Multiple Choice</option>
+                        <option value="checkboxes">Checkboxes</option>
+                        <option value="dropdown">Dropdown</option>
+                    </select>
+                    <div class="options-container"></div>
+                    <span class="add-option" onclick="addOption(this)" style="display: none;">+ Add Option</span>
+                </div>
+            </div>
+
+            <!-- Add question button -->
+            <button type="button" id="add-question" class="add-question">+ Add Question</button>
+
+            <!-- Save form button -->
+            <button type="submit" class="save-form">Save Form</button>
+        </form>
+    </div>
+
+    <!-- JavaScript for adding new questions and options dynamically -->
+    <script>
+        let questionCount = 1; // Keep track of the number of questions
+
+        document.getElementById('add-question').addEventListener('click', function() {
+            questionCount++; // Increment the question counter
+
+            // Create a new question container
+            const questionContainer = document.createElement('div');
+            questionContainer.classList.add('question-container');
+            
+            // Set the inner HTML of the new question container
+            questionContainer.innerHTML = `
+                <h3>Question ${questionCount}</h3>
+                <input type="text" name="questions[${questionCount - 1}][text]" placeholder="Enter your question" required>
+                <select name="questions[${questionCount - 1}][question_type]" onchange="handleQuestionTypeChange(this)">
+                    <option value="short-answer">Short Answer</option>
+                    <option value="paragraph">Paragraph</option>
+                    <option value="multiple-choice">Multiple Choice</option>
+                    <option value="checkboxes">Checkboxes</option>
+                    <option value="dropdown">Dropdown</option>
+                </select>
+                <div class="options-container"></div>
+                <span class="add-option" onclick="addOption(this)" style="display: none;">+ Add Option</span>
+            `;
+
+            // Append the new question container to the questions container
+            document.getElementById('questions-container').appendChild(questionContainer);
+        });
+
+        function handleQuestionTypeChange(selectElement) {
+            const optionsContainer = selectElement.parentNode.querySelector('.options-container');
+            const addOptionButton = selectElement.parentNode.querySelector('.add-option');
+
+            // Show or hide the "Add Option" button based on the selected question type
+            if (['multiple-choice', 'checkboxes', 'dropdown'].includes(selectElement.value)) {
+                optionsContainer.innerHTML = ''; // Clear any existing options
+                addOptionButton.style.display = 'inline'; // Show the Add Option button
+            } else {
+                optionsContainer.innerHTML = '';
+                addOptionButton.style.display = 'none'; // Hide the Add Option button
+            }
+        }
+
+        function addOption(addOptionButton) {
+            const optionsContainer = addOptionButton.previousElementSibling;
+            
+            // Create a new option input field
+            const newOption = document.createElement('div');
+            newOption.classList.add('option');
+            newOption.innerHTML = `<input type="text" name="options[]" placeholder="Option" required>`; // Ensure option is required
+
+            // Append the new option to the options container
+            optionsContainer.appendChild(newOption);
+        }
+    </script>
+</body>
+</html>

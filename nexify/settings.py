@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'landing_page',
     'home',
     'club',
+    'event',
 
     'markdownify' #markdown readme
 ]
