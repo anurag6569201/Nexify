@@ -285,22 +285,26 @@
           dept: '(Dept)'
         },
         'clickCreatingTool.insertPart': function (loc) {
-          // method override must be function, not =>
-          const node = go.ClickCreatingTool.prototype.insertPart.call(this, loc);
-          if (node !== null) {
-            this.diagram.select(node);
-            this.diagram.commandHandler.scrollToPart(node);
-            this.diagram.commandHandler.editTextBlock(node.findObject('NAMETB'));
+          // conditional check to only allow double-click if condition is met
+          if ({{edit_club_access}} === {{user_value}}) {
+            // method override must be function, not =>
+            const node = go.ClickCreatingTool.prototype.insertPart.call(this, loc);
+            if (node !== null) {
+              this.diagram.select(node);
+              this.diagram.commandHandler.scrollToPart(node);
+              this.diagram.commandHandler.editTextBlock(node.findObject('NAMETB'));
+            }
+            return node;
+          } else {
+            // prevent creation if the condition is not met
+            return null;
           }
-          return node;
         },
         layout: new go.TreeLayout({
           treeStyle: go.TreeStyle.LastParents,
           arrangement: go.TreeArrangement.Horizontal,
-          // properties for most of the tree:
           angle: 90,
           layerSpacing: 150,
-          // properties for the "last parents":
           alternateAngle: 90,
           alternateLayerSpacing: 110,
           alternateAlignment: go.TreeAlignment.Ho,
@@ -309,7 +313,8 @@
         'undoManager.isEnabled': true, // enable undo & redo
         'themeManager.changesDivBackground': true,
         'themeManager.currentTheme': document.getElementById('theme').value
-      });
+    });
+
   
       // when the document is modified, add a "*" to the title and enable the "Save" button
       myDiagram.addDiagramListener('Modified', (e) => {
@@ -439,12 +444,18 @@
         shadowOffset: new go.Point(0, 2),
         selectionObjectName: 'BODY',
         // show/hide buttons when mouse enters/leaves
-        mouseEnter: (e, node) =>
-          (node.findObject('BUTTON').opacity = node.findObject('BUTTONX').opacity = 1),
-        mouseLeave: (e, node) => {
-          if (node.isSelected) return; // if selected dont hide buttons
-          node.findObject('BUTTON').opacity = node.findObject('BUTTONX').opacity = 0;
+        mouseEnter: (e, node) => {
+          if ({{edit_club_access}} === {{user_value}}) {
+            node.findObject('BUTTON').opacity = 1;
+            node.findObject('BUTTONX').opacity = 1;
+          }
         },
+        mouseLeave: (e, node) => {
+          if (node.isSelected && {{edit_club_access}} === {{user_value}}) return; // if selected, don't hide buttons
+          node.findObject('BUTTON').opacity = 0;
+          node.findObject('BUTTONX').opacity = 0;
+        },
+
         // handle dragging a Node onto a Node to (maybe) change the reporting relationship
         mouseDragEnter: (e, node, prev) => {
           const diagram = node.diagram;
@@ -553,14 +564,18 @@
             width: 6,
             strokeWidth: 0
           }).themeObject('fill', '', 'levels', findLevelColor),
+          
           go.GraphObject.build('Button', {
             name: 'BUTTON',
             alignment: go.Spot.Right,
             opacity: 0, // initially not visible
-            click: (e, button) => addEmployee(button.part)
+            click: (e, button) => {
+              if ({{edit_club_access}} === {{user_value}}) {
+                addEmployee(button.part);
+              }
+            }
           })
-            // button is visible either when node is selected or on mouse-over
-            .bindObject('opacity', 'isSelected', (s) => (s ? 1 : 0))
+          .bindObject('opacity', 'isSelected', (s) => (s && edit_club_access === user_value ? 1 : 0))
             .add(
               new go.Shape('PlusLine', { width: 8, height: 8, stroke: '#0a0a0a', strokeWidth: 2 })
             ),
@@ -572,7 +587,8 @@
             opacity: 0 // initially not visible
           })
             // button is visible either when node is selected or on mouse-over
-            .bindObject('opacity', 'isSelected', (s) => (s ? 1 : 0))
+            .bindObject('opacity', 'isSelected', (s) => (s && edit_club_access === user_value ? 1 : 0))
+
         )
         .theme('shadowColor', 'shadow')
         // for sorting, have the Node.text be the data.name

@@ -6,15 +6,27 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 import json
 
+def get_user_by_pk(serialized_data, pk_value):
+    for item in serialized_data:
+        if item['pk'] == pk_value:
+            return item['fields']['user']
+    return None 
+
 def club(request,pk):
+    # print(request.user.pk)
     club_data, created = ClubData.objects.get_or_create(pk=pk)  # Assuming you have a `user` field
 
     global_club_data = ClubData.objects.all()
     serialized_data = json.loads(serialize('json', global_club_data))
 
     form = ClubDataForm(instance=club_data)
-
+    edit_club_access=request.user.pk
+    pk_value = club_data.pk
+    user_value = get_user_by_pk(serialized_data, pk_value)
+    # print(user_value)
     context = {
+        'edit_club_access':edit_club_access,
+        'user_value':user_value,
         'form': form,
         'club_data_pk': club_data.pk,
         'global_club_data': serialized_data,  # Pass serialized data
@@ -35,19 +47,3 @@ def edit_json_data(request, pk):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
 
-
-
-def club_rendered(request,pk):
-    club_data, created = ClubData.objects.get_or_create(pk=pk)  # Assuming you have a `user` field
-
-    global_club_data = ClubData.objects.all()
-    serialized_data = json.loads(serialize('json', global_club_data))
-
-    form = ClubDataForm(instance=club_data)
-
-    context = {
-        'form': form,
-        'club_data_pk': club_data.pk,
-        'global_club_data': serialized_data,  # Pass serialized data
-    }
-    return render(request, 'apps/club/club.html', context)

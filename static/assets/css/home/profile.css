@@ -12,6 +12,7 @@
 .markdown-body{
     padding: 1rem;
     border-radius: 1rem;
+    min-height: calc(100vh - 2rem);
 }
 .edit_readme_btn{
     position: absolute;
@@ -86,8 +87,8 @@
     background-color: grey;
     border: 1px solid white;
     border-radius: 50%;
-    width: 70px;
-    height: 70px;
+    width: 55px;
+    height: 55px;
 }
 .profile_recent_activity{
     flex-direction: column;

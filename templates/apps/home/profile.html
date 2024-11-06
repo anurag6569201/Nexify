@@ -19,7 +19,7 @@
                 {% if user_profile_data.background_picture %}
                 <img class="profile_background_image" src="{{ user_profile_data.background_picture.url }}" alt="">
                 {% else %}
-                <img class="profile_background_image" src="" alt="background_image" style="background-color: grey;">
+                <img class="profile_background_image" src="" alt="background_image">
                 {% endif %}
                 {% if user_profile_data.background_picture %}
                 <img class="profile_image_pic" src="{{ user_profile_data.profile_picture.url }}" alt="" >
@@ -27,6 +27,7 @@
                 <img class="profile_image_pic" src="" alt="profile_image" style="background-color: black;">
                 {% endif %}
             </div>
+            <hr>
             <p>
                 <b style="font-size: x-large;">{{ user_profile_data.name }}</b><br>
                 {{ user_profile_data.bio }}
@@ -59,7 +60,7 @@
             </p>
             <hr>
             <p>
-                <h3 style="color: rgb(213, 211, 211);">Achievements</h3>
+                <h4 style="color: rgb(213, 211, 211);">Achievements</h4>
                 <div class="profile_achievements">
                     <span></span>
                     <span></span>
@@ -71,7 +72,7 @@
             </p>
             <hr>
             <p>
-                <h3 style="color: rgb(213, 211, 211);">Society/Clubs</h3>
+                <h4 style="color: rgb(213, 211, 211);">Society/Clubs</h4>
                 <div class="profile_achievements">
                     <span></span>
                     <span></span>
@@ -83,7 +84,7 @@
             </p>
             <hr>
             <p>
-                <h3 style="color: rgb(213, 211, 211);">Recent Activity</h3>
+                <h4 style="color: rgb(213, 211, 211);">Recent Activity</h4>
                 <div class="profile_achievements">
                     <div class="profile_recent_activity">
                         <span></span>
