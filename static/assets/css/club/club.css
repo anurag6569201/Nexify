@@ -82,3 +82,29 @@
 #treeTable_wrapper{
     max-height: 60vh;
 }
+#treeTable_filter{
+    width: 100%;
+}
+#treeTable_filter label{
+    width: 100%;
+    text-align: left;
+}
+#treeTable_filter label input{
+    width: -webkit-fill-available;
+}
+.instruction_initially{
+    position: absolute;
+    top: 1rem;
+    left: 0rem;
+    right: 0rem;
+    display: flex;
+    justify-content: right;
+}
+.instruction_initially span{
+    border: 1px solid white;
+    font-size: .6rem;
+    padding: .4rem;
+    border-radius: .4rem;
+    margin-right: 2rem;
+    opacity: .5;
+}

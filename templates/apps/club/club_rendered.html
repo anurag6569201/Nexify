@@ -61,7 +61,6 @@
   #sample{
     color: white;
   }
-  #add_society_or_club_btn,
   #load_btn,
   #SaveButton,
   #centerRoot,
@@ -79,7 +78,6 @@
   #theme option{
     color: white;
   }
-  #add_society_or_club_btn:hover,
   #load_btn:hover,
   #SaveButton:hover,
   #centerRoot:hover,
@@ -87,12 +85,6 @@
   #theme:hover{
     background-color: #299afd;
     color: #fff;
-}
-#add_society_or_club_btn{
-  position: absolute;
-  top: 1rem;
-  right: 2rem;
-  z-index: 200;
 }
 </style>
 {% endblock stylesheet %}
@@ -119,7 +111,51 @@
                 
                   <script>
                     $(document).ready(function() {
-  var data = {{global_club_data|safe}};
+  var data = [
+    {
+      'model': 'club.clubdata',
+      'pk': 4,
+      'fields': {
+        'user': 2,
+        'fixed_json_metadata': '"class": "go.TreeModel","nodeDataArray":',
+        'json_data': '{ "class": "TreeModel", "nodeDataArray": ['
+                      + '{"key":1,"name":"IIIT BHUBANESWAR","title":"College","dept":"Management","pic":"1.jpg","email":"sdiaz@example.com","phone":"(234) 555-6789","EMAIL":false,"PHONE":false},'
+                      + '{"name":"TECH SOCIETY","title":"technology","dept":"Management","parent":1,"key":7,"PHONE":false,"EMAIL":false},'
+                      + '{"name":"MESS SOCIETY","title":"foody","dept":"Management","parent":1,"key":25,"EMAIL":false,"PHONE":false},'
+                      + '{"name":"TARS SOCIETY","title":"robotics","dept":"Management","parent":1,"key":2,"EMAIL":false,"PHONE":false},'
+                      + '{"name":"PSOC","title":"programming","dept":"Management","parent":7,"key":3,"PHONE":false,"EMAIL":false},'
+                      + '{"name":"GDG","title":"cloud","dept":"Management","parent":7,"key":4,"EMAIL":false},'
+                      + '{"name":"WEB DEV","title":"website","dept":"Management","parent":3,"key":5,"PHONE":false,"EMAIL":false},'
+                      + '{"name":"APP DEV","title":"app","dept":"Management","parent":3,"key":6,"PHONE":false},'
+                      + '{"name":"GAME DEV","title":"Games","dept":"Management","parent":3,"key":8,"PHONE":false},'
+                      + '{"name":"GOOGLE","title":"gc","dept":"Management","parent":4,"key":11,"EMAIL":false,"PHONE":false},'
+                      + '{"name":"AMAZON","title":"aws","dept":"Management","parent":4,"key":12},'
+                      + '{"name":"MICROSOFT","title":"azure","dept":"Management","parent":4,"key":13,"PHONE":false,"EMAIL":false},'
+                      + '{"name":"1ST FLOOR","title":"mess","dept":"Management","parent":25,"key":14,"EMAIL":false,"PHONE":false},'
+                      + '{"name":"2ND FLOOR","title":"mess","dept":"Management","parent":25,"key":15,"PHONE":false},'
+                      + '{"name":"CONTENT","title":"advertise","dept":"Management","parent":2,"key":16,"PHONE":false},'
+                      + '{"name":"HARDWARE","title":"building","dept":"Management","parent":2,"key":17,"EMAIL":false},'
+                      + '{"name":"SOFTWARE","title":"coding","dept":"Management","parent":2,"key":18,"PHONE":false}'
+                      + ']}'
+      }
+    },
+    {
+      'model': 'club.clubdata',
+      'pk': 5,
+      'fields': {
+        'user': 1,
+        'fixed_json_metadata': '"class": "go.TreeModel","nodeDataArray":',
+        'json_data': '{ "class": "TreeModel", "nodeDataArray": ['
+                      + '{"key":1,"name":"JOGGING","title":"joggers","dept":"Management","pic":"1.jpg","email":"sdiaz@example.com","phone":"(234) 555-6789"},'
+                      + '{"name":"STARVA","title":"starva jogging","dept":"Management","parent":1,"key":2},'
+                      + '{"name":"JOGGER SPECIAL","title":"jogiers","dept":"Management","parent":1,"key":3},'
+                      + '{"name":"GROUP1","title":"people","dept":"Management","parent":2,"key":4},'
+                      + '{"name":"GROUP2","title":"people","dept":"Management","parent":3,"key":5},'
+                      + '{"name":"GROUP3","title":"people","dept":"Management","parent":3,"key":6}'
+                      + ']}'
+      }
+    }
+  ];
 
   // Create an array to hold the flattened data for the DataTable
   var tableData = [];
@@ -147,8 +183,7 @@
     dataArray.forEach(item => {
       var mostParentName = findMostParent(item, dataMap);
       // Wrap the name in an <a> tag with the pk value
-      var baseRenderUrl = "{% url 'club:club' 0 %}".slice(0, -2);
-      var nameWithLink = `<a href="${baseRenderUrl}${pk}">${item.name || ''}</a>`;
+      var nameWithLink = `<a href="${pk}">${item.name || ''}</a>`;
       // Push the flattened data into tableData
       tableData.push([
         nameWithLink,
@@ -185,9 +220,6 @@
               <div class="col-md-9" style="position: relative;padding-left: 0;">
                 <div id="myDiagramDiv" style="border: solid 1px black; height: calc(100vh - 2rem);width: 100%;">
                 </div>
-                <div class="instruction_initially">
-                  <span>Double Tap the Area to Create Own Society </span>
-                </div>
                 <div style="display: flex;gap: 1rem;margin-top: 1rem;position: absolute;bottom: 1rem;left: 1rem;">
                   <select id="theme" onchange="changeTheme()">
                       <option value="system">System</option>
@@ -200,7 +232,7 @@
                     <button id="SaveButton" class="save_and_edit_data" type="button" onclick="save()">Save</button>
                 </form>
                   <button id="load_btn" onclick="load()">Load</button>
-                </div>
+              </div>
               </div>
             </div>
             <div>
