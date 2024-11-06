@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submissions for {{ form.title }}</title>
+</head>
+<body>
+    <h1>Submissions for {{ form.title }}</h1>
+    <p>{{ form.description }}</p>
+
+    {% if responses %}
+        {% for response in responses %}
+            <h2>Submission {{ forloop.counter }}</h2>
+            <p>Submitted on: {{ response.created_at }}</p>
+            <ul>
+                {% for answer in response.answers.all %}
+                    <li><strong>{{ answer.question.text }}:</strong> {{ answer.answer_text }}</li>
+                {% endfor %}
+            </ul>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>No submissions have been made for this form yet.</p>
+    {% endif %}
+
+    <a href="{% url 'form_list' %}">Back to Forms List</a>
+</body>
+</html>

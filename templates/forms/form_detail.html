@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ form.title }}</title>
+</head>
+<body>
+    <h1>{{ form.title }}</h1>
+    <p>{{ form.description }}</p>
+
+    <form method="post" action="">
+        {% csrf_token %}
+
+        {% for question in questions %}
+            <div>
+                <p>{{ question.text }}</p>
+
+                {% if question.question_type == 'TEXT' or question.question_type == 'SA' %}
+                    <!-- Short Answer and Text Input (Text Field) -->
+                    <input type="text" name="question_{{ question.id }}" required><br>
+
+                {% elif question.question_type == 'LA' %}
+                    <!-- Long Answer (Textarea) -->
+                    <textarea name="question_{{ question.id }}" rows="4" required></textarea><br>
+
+                {% elif question.question_type == 'MC' %}
+                    <!-- Multiple Choice (Radio Buttons) -->
+                    {% for choice in question.split_choices %}
+                        <label>
+                            <input type="radio" name="question_{{ question.id }}" value="{{ choice }}" required>
+                            {{ choice }}
+                        </label><br>
+                    {% endfor %}
+
+                {% elif question.question_type == 'DD' %}
+                    <!-- Dropdown (Select Option) -->
+                    <select name="question_{{ question.id }}" required>
+                        <option value="">Select an option</option>
+                        {% for choice in question.split_choices %}
+                            <option value="{{ choice }}">{{ choice }}</option>
+                        {% endfor %}
+                    </select><br>
+
+                {% elif question.question_type == 'DT' %}
+                    <!-- Date and Time (Datetime Picker) -->
+                    <input type="datetime-local" name="question_{{ question.id }}" required><br>
+                
+                {% else %}
+                    <p>Unknown question type.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <a href="{% url 'form_responses' form.id %}">View Submissions</a> <!-- Link to submissions view -->
+</body>
+</html>

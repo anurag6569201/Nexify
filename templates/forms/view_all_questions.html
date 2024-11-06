@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Questions for {{ form.title }}</title>
+</head>
+<body>
+    <h1>Questions for {{ form.title }}</h1>
+
+    <ul>
+        {% for question in questions %}
+            <li>
+                <strong>{{ question.text }}</strong> (Type: {{ question.get_question_type_display }})
+            </li>
+        {% empty %}
+            <p>No questions added yet.</p>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'form_list' %}">Back to Form List</a>
+</body>
+</html>
