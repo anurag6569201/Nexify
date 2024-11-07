@@ -47,3 +47,8 @@ def edit_json_data(request, pk):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
 
+
+def club_detail(request, pk_club,pk_branch):
+    club_data = get_object_or_404(ClubData, pk=pk_club)
+    print(club_data)
+    return render(request, 'apps/club/club_detail.html')

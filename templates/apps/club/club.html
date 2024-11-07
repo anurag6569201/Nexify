@@ -303,13 +303,15 @@
         layout: new go.TreeLayout({
           treeStyle: go.TreeStyle.LastParents,
           arrangement: go.TreeArrangement.Horizontal,
-          angle: 90,
+          angle: 0,
           layerSpacing: 150,
-          alternateAngle: 90,
+          alternateAngle: 0,
           alternateLayerSpacing: 110,
-          alternateAlignment: go.TreeAlignment.Ho,
-          alternateNodeSpacing: 40
+          alternateAlignment: go.TreeAlignment.CenterChildren,  // Center aligns child nodes
+          alternateNodeSpacing: 40,
+          nodeSpacing: 160, 
         }),
+
         'undoManager.isEnabled': true, // enable undo & redo
         'themeManager.changesDivBackground': true,
         'themeManager.currentTheme': document.getElementById('theme').value
@@ -503,8 +505,8 @@
               new go.Panel(go.Panel.Table, { margin: 0.5, defaultRowSeparatorStrokeWidth: 0.5 })
                 .theme('defaultRowSeparatorStroke', 'divider')
                 .add(
-                  new go.Panel(go.Panel.Table, { padding: new go.Margin(18, 18, 18, 24) })
-                    .addColumnDefinition(0, { width: 240 })
+                  new go.Panel(go.Panel.Table, { padding: new go.Margin(18, 18, 18, 18) })
+                    .addColumnDefinition(0, { width: 250 })
                     .add(
                       new go.Panel(go.Panel.Table, {
                         column: 0,
@@ -512,42 +514,62 @@
                         stretch: go.Stretch.Vertical,
                         defaultAlignment: go.Spot.Left
                       })
-                        .add(
-                          new go.Panel(go.Panel.Horizontal, { row: 0 })
-                            .add(
-                              new go.TextBlock({ editable: true, minSize: new go.Size(10, 14) })
-                                .bindTwoWay('text', 'name')
-                                .theme('stroke', 'text')
-                                .theme('font', 'name'),
-                              new go.Panel(go.Panel.Auto, { margin: new go.Margin(0, 0, 0, 10) })
-                                .add(
-                                  new go.Shape('Capsule', { parameter1: 6, parameter2: 6 })
-                                    .theme('fill', 'badge')
-                                    .theme('stroke', 'badgeBorder'),
-                                  new go.TextBlock({
-                                    editable: true,
-                                    minSize: new go.Size(10, 12),
-                                    margin: new go.Margin(2, -1)
-                                  })
-                                    .bindTwoWay('text', 'dept')
-                                    .theme('stroke', 'badgeText')
-                                    .theme('font', 'badge')
-                                )
-                            ),
-                          new go.TextBlock({ row: 1, editable: true, minSize: new go.Size(10, 14) })
-                            .bindTwoWay('text', 'title')
-                            .theme('stroke', 'subtext')
-                            .theme('font', 'normal')
-                        ),
-                      new go.Panel(go.Panel.Spot, { isClipping: true, column: 1 })
-                        .add(
-                          new go.Shape('Circle', { desiredSize: new go.Size(50, 50), strokeWidth: 0 }),
-                          new go.Picture({
-                            name: 'PICTURE',
-                            source: '../samples/images/user.svg',
-                            desiredSize: new go.Size(50, 50)
-                          }).bind('source', 'pic', findHeadShot)
-                        )
+                      .add(
+  new go.Panel(go.Panel.Horizontal, { row: 0 })
+    .add(
+      new go.TextBlock({ editable: true, minSize: new go.Size(10, 14) })
+        .bindTwoWay('text', 'name')
+        .theme('stroke', 'text')
+        .theme('font', 'name'),
+      new go.Panel(go.Panel.Auto, { margin: new go.Margin(0, 0, 0, 10) })
+        .add(
+          new go.Shape('Capsule', { parameter1: 6, parameter2: 6 })
+            .theme('fill', 'badge')
+            .theme('stroke', 'badgeBorder'),
+          new go.TextBlock({
+            editable: true,
+            minSize: new go.Size(10, 12),
+            margin: new go.Margin(2, -1)
+          })
+            .bindTwoWay('text', 'dept')
+            .theme('stroke', 'badgeText')
+            .theme('font', 'badge')
+        )
+    ),
+  new go.Panel(go.Panel.Horizontal, { row: 1, alignment: go.Spot.Left })
+    .add(
+      new go.TextBlock({ editable: true, minSize: new go.Size(10, 14) })
+        .bindTwoWay('text', 'title')
+        .theme('stroke', 'subtext')
+        .theme('font', 'normal'),
+      // Add the capsule button with "View" text
+      new go.Panel(go.Panel.Auto, { margin: new go.Margin(3, 0, 0, 10) })
+        .add(
+          new go.Shape('Capsule', {
+            parameter1: 6,  // Controls capsule curvature
+            fill: '#13292c',   // Button color
+            stroke: '#153d32', // Border color
+            cursor: 'pointer',
+            click: function(e, obj) {
+              var keyValue = obj.part.data.key;  
+              window.location.href = `${keyValue}`;
+            }
+          }),
+          new go.TextBlock("View", {
+            margin: new go.Margin(1, 6),  // Adjust for padding inside capsule
+            stroke: '#4bde80',              // Text color
+            font: 'bold 10pt sans-serif',
+            cursor: 'pointer',
+            click: function(e, obj) {
+              var keyValue = obj.part.data.key;  
+              window.location.href = `${keyValue}`;
+
+            }
+          })
+        )
+    )
+),
+
                     ),
                   new go.Panel(go.Panel.Table, {
                     row: 1,
@@ -555,6 +577,7 @@
                     defaultColumnSeparatorStrokeWidth: 0.5
                   })
                     .theme('defaultColumnSeparatorStroke', 'divider')
+                    
                 )
             ), // end Auto Panel
           new go.Shape('RoundedLeftRectangle', {
@@ -565,29 +588,41 @@
             strokeWidth: 0
           }).themeObject('fill', '', 'levels', findLevelColor),
           
-          go.GraphObject.build('Button', {
-            name: 'BUTTON',
-            alignment: go.Spot.Right,
-            opacity: 0, // initially not visible
-            click: (e, button) => {
-              if ({{edit_club_access}} === {{user_value}}) {
-                addEmployee(button.part);
-              }
-            }
-          })
-          .bindObject('opacity', 'isSelected', (s) => (s && edit_club_access === user_value ? 1 : 0))
-            .add(
-              new go.Shape('PlusLine', { width: 8, height: 8, stroke: '#0a0a0a', strokeWidth: 2 })
-            ),
-          go.GraphObject.build('TreeExpanderButton', {
-            _treeExpandedFigure: 'LineUp',
-            _treeCollapsedFigure: 'LineDown',
-            name: 'BUTTONX',
-            alignment: go.Spot.Bottom,
-            opacity: 0 // initially not visible
-          })
-            // button is visible either when node is selected or on mouse-over
-            .bindObject('opacity', 'isSelected', (s) => (s && edit_club_access === user_value ? 1 : 0))
+          go.GraphObject.make(
+  go.Panel, 'Vertical',  // Wrap the buttons in a vertical panel
+  {
+    alignment: go.Spot.RightCenter, // Align the panel to the right center
+    margin: new go.Margin(20, 0, 0, 7) // Add some margin around the panel
+  },
+  
+  // First button (Add Employee button)
+  go.GraphObject.make('Button', {
+    name: 'BUTTON',
+    opacity: 0, // initially not visible
+    click: (e, button) => {
+      if ({{edit_club_access}} === {{user_value}}) {
+        addEmployee(button.part);
+      }
+    }
+  })
+  .bindObject('opacity', 'isSelected', (s) => (s && edit_club_access === user_value ? 1 : 0))
+  .add(
+    new go.Shape('PlusLine', { width: 15, height: 15, stroke: '#0a0a0a', strokeWidth: 2 })
+  ),
+
+  // Second button (Tree Expander button)
+  go.GraphObject.make('TreeExpanderButton', {
+    _treeExpandedFigure: 'LineUp',
+    _treeCollapsedFigure: 'LineDown',
+    name: 'BUTTONX',
+    width: 23,  // Set the width of the button
+    height: 23,
+    margin: new go.Margin(6, 0),
+    angle:90,
+    opacity: 1, // initially visible
+  })
+  .bindObject('opacity', 'isSelected', (s) => (s && edit_club_access === user_value ? 1 : 0))
+)
 
         )
         .theme('shadowColor', 'shadow')
