@@ -7,9 +7,168 @@
 {% trans "Profile" %}
 {% endblock head_title %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'assets/css/club/club.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/club/club_detail.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 {% endblock stylesheet %}
 {% block pages %}
 
+<div class="col-md-12 club_detail">
+    <div class="club_detail_space">
+        <div class="club_detail_header">
+            <div class="profile_image">
+                <img class="profile_background_image" src="{{ club_details.background_image.url }}"
+                    alt="background_image">
+                <img class="profile_image_pic" src="{{ club_details.logo_image.url }}" alt="">
+            </div>
+            <p>
+                <span style="display: flex;justify-content: space-between;">
+                    <span><b style="font-size: x-large;">{{ club_details.club_name }}</b><br>
+                        {{ club_details.club_subtext }} <br>
+                    </span>
+                    <span>
+                        {% if user_value != edit_club_access %}
+                        <button id="join-club-btn">Join Club</button>
+                        {% endif %}
+                    </span>
 
-{% endblock pages %}
+                </span>
+                <span>{{ club_details.club_description }}</span>
+            </p>
+            <div class="member_space">
+                <div class="table-responsive">
+                    <table id="invoiceTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Sr. No.</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Role</th>
+                                <th class="text-center">Power</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for club_member_info in club_members_details %}
+                            <tr>
+                                <td class="text-center">{{ forloop.counter }}</td>
+                                <td class="text-center">{{ club_member_info.user.username }}</td>
+                                <td class="text-center">{{ club_member_info.role }}</td>
+                                <td class="text-center">{{ club_member_info.power }}</td>
+                                <td class="text-center">
+                                   
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if user_value == edit_club_access %}
+                <div class="member_request_space">
+                    <h3 class="pt-3">Join Requests ({{pending_count}})</h3>
+                    <ul id="join-requests-list">
+                        {% for request in join_request %}
+                        {% if request.status == "Pending" %}
+                        <li id="request-{{ request.id }}">
+                            <strong>{{ request.user.username }}</strong> - {{ request.created_at }}
+                            <button data-request-id="{{ request.id }}" data-action="approve"
+                                class="btn btn-success handle-request">Approve</button>
+                            <button data-request-id="{{ request.id }}" data-action="reject"
+                                class="btn btn-danger handle-request">Reject</button>
+                        </li>
+                        {% endif %}
+                        {% empty %}
+                        <li>No pending join requests.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <script>
+                    $(document).ready(function () {
+                        $('.handle-request').on('click', function () {
+                            const requestId = $(this).data('request-id');
+                            const action = $(this).data('action');
+                            const $requestItem = $(`#request-${requestId}`);
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '{% url "club:handle_join_request" %}',
+                                data: {
+                                    'request_id': requestId,
+                                    'action': action,
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                                },
+                                success: function (response) {
+                                    alert(response.message);
+                                    if (response.status) {
+                                        $requestItem.find('.status-label').text(response.status);
+                                        $requestItem.fadeOut(500, function () {
+                                            $(this).remove();
+                                        });
+                                    }
+                                },
+                                error: function (xhr) {
+                                    alert('An error occurred: ' + xhr.responseJSON.error);
+                                }
+                            });
+                        });
+                    });
+                    
+                </script>
+<script>
+    $(document).ready(function () {
+        $('#invoiceTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "columnDefs": [
+                { "orderable": false, "targets": 4 }
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('join-club-btn').addEventListener('click', function () {
+            const csrftoken = '{{ csrf_token }}';
+            const clubId = '{{ club_data.pk }}';
+            const branchPk = '{{ pk_branch }}';
+
+            fetch(`{% url 'club:join_club_request' %}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    club_id: clubId,
+                    branch_pk: branchPk
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Join request sent successfully!");
+                    } else {
+                        alert("You have already requested to join this club.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred. Please try again later.");
+                });
+        });
+    </script>
+    {% endblock pages %}

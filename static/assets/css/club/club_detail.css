@@ -1,0 +1,79 @@
+.club_detail_space{
+    margin-right: 1rem;
+    border-radius: 1rem;
+    padding: 1rem;
+    background-color: #0c1117;
+    color: white;
+}
+
+
+.profile_image{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 300px;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+}
+.profile_image .profile_background_image{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.profile_image .profile_image_pic{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 2px solid #a19f9f;
+}
+.table-responsive,
+.table-responsive table{
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+.table-responsive th,
+.table-responsive td{
+    background-color: #161e29;
+    color: white;
+}
+#invoiceTable_filter{
+    width: 100%;
+}
+#invoiceTable_filter label{
+    width: 100%;
+    text-align: left;
+}
+#invoiceTable_filter label input{
+    width: 300px;
+    color: white;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+}
+<!-- Display branch info -->
+<h2>{{ branch_data.branch.name }}</h2>
+<p>Title: {{ branch_data.branch.title }}</p>
+
+<!-- Display immediate children -->
+<h3>Direct Children:</h3>
+<ul>
+{% for child in branch_data.children %}
+    <li>{{ child.name }}</li>
+{% endfor %}
+</ul>
+
+<!-- Display all descendants -->
+<h3>All Descendants:</h3>
+<ul>
+{% for descendant in branch_data.descendants %}
+    <li>{{ descendant.name }}</li>
+{% endfor %}
+</ul>
