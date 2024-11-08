@@ -1,0 +1,204 @@
+{% extends "allauth/layouts/main_base.html" %}
+{% load i18n %}
+{% load static %}
+{% load markdownify %}
+{% load allauth account %}
+{% block head_title %}
+{% trans "Profile" %}
+{% endblock head_title %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'assets/css/tracking/tracking.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock stylesheet %}
+{% block pages %}
+
+    <section class="col-md-12 section_tracking">
+        <div class="tracking_space container">
+            <!-- File Upload Section -->
+            <div class="file_space_upload mb-5">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <h2 class="form-title text-center">Upload Your File</h2>
+                        <p class="form-paragraph text-center">
+                            File should be an image or document
+                        </p>
+                        <div class="col-md-6" style="display: flex; flex-direction: column; justify-content: center;">
+                            <div class="mb-3">
+                                <label for="file-input" class="form-label drop-container">
+                                    <span class="drop-title">Drop files here or click to upload</span>
+                                    <input type="file" name="file" accept="image/*,application/pdf" required id="file-input" class="form-control">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="display: flex; flex-direction: column; justify-content: center;">
+                            <div class="mb-3">
+                                <input type="text" name="short_note" class="form-control" placeholder="Add a short note (optional)">
+                            </div>
+                            <div class="mb-3">
+                                <select name="department" class="form-select" required>
+                                    <option value="" selected>Select Department</option>
+                                    <option value="Administration">Administration</option>
+                                    <option value="Academics">Academics</option>
+                                    <option value="Finance">Finance</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <select name="receiver" class="form-select" required>
+                                    <option value="" selected>Select Receiver</option>
+                                    {% for user in users %}
+                                        <option value="{{ user.id }}">{{ user.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="button" id="uploadButton" class="btn btn-primary w-100">Upload File</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    
+            <!-- File Tracking Section -->
+            <div class="file_space_tracking_details">
+                <h3 class="text-center">File Transfer History</h3>
+                <div id="trackingDetails" class="col-md-12">
+                    <ul class="list-group" id="trackingList">
+                        <!-- AJAX will populate this list -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Received Files Section -->
+        <div class="received_files_section mt-5">
+            <h3 class="text-center">Received Files</h3>
+            <div id="receivedFilesDetails" class="col-md-12">
+                <ul class="list-group" id="receivedFilesList">
+                    <!-- AJAX will populate this list -->
+                </ul>
+            </div>
+        </div>
+    
+    </section>
+    
+    <script>
+        $(document).ready(function () {
+            // File upload handler
+            $('#uploadButton').click(function (e) {
+                e.preventDefault();
+                let formData = new FormData($('#uploadForm')[0]);
+    
+                $.ajax({
+                    url: "{% url 'tracking:tracking' %}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRFToken': $("input[name='csrfmiddlewaretoken']").val(),
+                    },
+                    success: function (response) {
+                        if (response.message) {
+                            alert(response.message);
+                        } else {
+                            alert('Upload successful, but no message returned from server.');
+                        }
+                        $('#uploadForm')[0].reset();
+                        fetchTrackingDetails();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error uploading file:', error);
+                        alert('Error uploading file. Please try again.');
+                    }
+                });
+            });
+    
+            // Fetch all tracking details (file movement history)
+            function fetchTrackingDetails() {
+                $.ajax({
+                    url: "{% url 'tracking:get_tracking_details' %}",
+                    type: 'GET',
+                    success: function (response) {
+                        let trackingList = $('#trackingList');
+                        trackingList.empty();
+    
+                        if (response.movements && response.movements.length > 0) {
+                            response.movements.forEach(function (movement) {
+                                let listItem = `
+                                    <li class="list-group-item">
+                                        <strong>File:</strong> ${movement.file_name}<br>
+                                        <strong>Sent by:</strong> ${movement.sender}<br>
+                                        <strong>Received by:</strong> ${movement.receiver}<br>
+                                        <strong>Short Note:</strong> ${movement.short_note || 'N/A'}<br>
+                                        <strong>Feedback:</strong> ${movement.feedback || 'No feedback yet'}<br>
+                                        <strong>Status:</strong> ${movement.status}<br>
+                                        <strong>Date:</strong> ${movement.transfer_date}<br>
+                                        <button class="btn btn-info btn-sm mt-2" onclick="sendFileToAnother(${movement.id})">Send to Another</button>
+                                        <button class="btn btn-warning btn-sm mt-2" onclick="updateStatus(${movement.id})">Update Status</button>
+                                    </li>
+                                `;
+                                trackingList.append(listItem);
+                            });
+                        } else {
+                            trackingList.append('<p class="text-center">No transfer history available.</p>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching tracking details:', error);
+                        alert('Error fetching tracking details.');
+                    }
+                });
+            }
+    
+            // Fetch received files for the user
+            function fetchReceivedFiles() {
+                $.ajax({
+                    url: "{% url 'tracking:received_files' %}",
+                    type: 'GET',
+                    success: function (response) {
+                        let receivedFilesList = $('#receivedFilesList');
+                        receivedFilesList.empty();
+    
+                        if (response.files && response.files.length > 0) {
+                            response.files.forEach(function (file) {
+                                let listItem = `
+                                    <li class="list-group-item">
+                                        <strong>File:</strong> ${file.file_name}<br>
+                                        <strong>Sent by:</strong> ${file.sender}<br>
+                                        <strong>Date Received:</strong> ${file.transfer_date}<br>
+                                        <button class="btn btn-warning btn-sm mt-2" onclick="updateStatus(${file.id})">Update Status</button>
+                                    </li>
+                                `;
+                                receivedFilesList.append(listItem);
+                            });
+                        } else {
+                            receivedFilesList.append('<p class="text-center">No received files available.</p>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching received files:', error);
+                        alert('Error fetching received files.');
+                    }
+                });
+            }
+    
+            // Function to send a file to another user
+            window.sendFileToAnother = function (transferId) {
+                if (confirm('Are you sure you want to send this file to another user?')) {
+                    window.location.href = `tracking/send/${transferId}`;
+                }
+            };
+    
+            // Function to update the status of a file
+            window.updateStatus = function (transferId) {
+                if (confirm('Are you sure you want to update the status of this file?')) {
+                    window.location.href = "{% url 'tracking:update_transfer_status' 0 %}".replace('0', transferId);
+                }
+            };
+    
+            // Initialize tracking and received files fetch
+            fetchTrackingDetails();
+            fetchReceivedFiles();
+        });
+    </script>
+
+{% endblock pages %}

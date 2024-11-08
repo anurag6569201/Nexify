@@ -108,3 +108,8 @@
     margin-right: 2rem;
     opacity: .5;
 }
+@media(min-width:768px){
+    .search_box_of_club{
+        font-size: 12px;
+    }
+}

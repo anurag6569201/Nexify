@@ -1,0 +1,40 @@
+{% extends "allauth/layouts/main_base.html" %}
+{% load i18n %}
+{% load static %}
+{% load markdownify %}
+{% load allauth account %}
+{% block head_title %}
+{% trans "Profile" %}
+{% endblock head_title %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'assets/css/tracking/tracking.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock stylesheet %}
+{% block pages %}
+
+<section class="col-md-12 section_tracking">
+    <h2>Send File: {{ file_movement.file.file.name }}</h2>
+    <p><strong>Sender:</strong> {{ file_movement.sender.username }}</p>
+    <p><strong>Receiver:</strong> {{ file_movement.receiver.username }}</p>
+    <p><strong>Status:</strong> {{ file_movement.status }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="new_receiver" class="form-label">Select New Receiver</label>
+            <select name="new_receiver" class="form-select" required>
+                <option value="">Select a receiver</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="short_note" class="form-label">Short Note (Optional)</label>
+            <textarea name="short_note" class="form-control" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send to New Receiver</button>
+    </form>
+</section>
+
+{% endblock pages %}

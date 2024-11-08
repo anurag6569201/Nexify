@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'home',
     'club',
     'event',
+    'tracking',
 
     'markdownify' #markdown readme
 ]
