@@ -65,22 +65,50 @@
                 </div>
                 {% if user_value == edit_club_access %}
                 <div class="member_request_space">
+                    <hr>
                     <h3 class="pt-3">Join Requests ({{pending_count}})</h3>
-                    <ul id="join-requests-list">
-                        {% for request in join_request %}
-                        {% if request.status == "Pending" %}
-                        <li id="request-{{ request.id }}">
-                            <strong>{{ request.user.username }}</strong> - {{ request.created_at }}
-                            <button data-request-id="{{ request.id }}" data-action="approve"
-                                class="btn btn-success handle-request">Approve</button>
-                            <button data-request-id="{{ request.id }}" data-action="reject"
-                                class="btn btn-danger handle-request">Reject</button>
-                        </li>
-                        {% endif %}
-                        {% empty %}
-                        <li>No pending join requests.</li>
-                        {% endfor %}
-                    </ul>
+                    <table id="join-requests-table" class="table table-striped ">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Requested At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in join_request %}
+                            {% if request.status == "Pending" %}
+                            <tr id="request-{{ request.id }}">
+                                <td><strong>{{ request.user.username }}</strong></td>
+                                <td><strong>{% if request.user.email %}{{ request.user.email }}{% else %}{{ request.user.username }}@gmail.com{% endif %}</strong></td>
+                                <td>{{ request.request_date }}</td>
+                                <td>
+                                    <button data-request-id="{{ request.id }}" data-action="approve"
+                                        class="btn btn-success handle-request">Approve</button>
+                                    <button data-request-id="{{ request.id }}" data-action="reject"
+                                        class="btn btn-danger handle-request">Reject</button>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No pending join requests.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <script>
+                        $(document).ready(function() {
+                            $('#join-requests-table').DataTable({
+                                "paging": true,  // Enable pagination
+                                "searching": true,  // Enable searching/filtering
+                                "ordering": true,  // Enable sorting
+                                "info": true,  // Show information about the data
+                                "lengthMenu": [10, 25, 50, 75, 100],
+                            });
+                        });
+                    </script>
                 </div>
                 {% endif %}
 

@@ -58,7 +58,9 @@ class ClubMember(models.Model):
             ('Head', 'Head'),
             ('Vice President', 'Vice President'),
             ('Secretary', 'Secretary'),
-            ('Treasurer', 'Treasurer'),
+            ('HOD', 'HOD'),
+            ('Associate Professor','Associate Professor'),
+            ('Assistant Professor','Assistant Professor'),
             ('Member', 'Member')
         ],
         default='Member'

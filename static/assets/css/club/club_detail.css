@@ -39,24 +39,32 @@
     padding: 0;
     margin: 0;
 }
+#join-requests-table th,
+#join-requests-table td,
 .table-responsive th,
 .table-responsive td{
     background-color: #161e29;
     color: white;
 }
+#join-requests-table_filter,
 #invoiceTable_filter{
     width: 100%;
 }
+#join-requests-table_filter label,
 #invoiceTable_filter label{
     width: 100%;
     text-align: left;
 }
+#join-requests-table_filter label input,
 #invoiceTable_filter label input{
     width: 300px;
     color: white;
     margin-left: 1rem;
     margin-bottom: 1rem;
     margin-top: 2rem;
+}
+.dataTables_length label{
+    display: none !important;
 }
 <!-- Display branch info -->
 <h2>{{ branch_data.branch.name }}</h2>
