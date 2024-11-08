@@ -1,0 +1,62 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/polls/vote_poll.css' %}">
+</head>
+<script>
+    // Countdown Timer Function
+    function countDown(pollClosingTime, pollId) {
+        var countDownDate = new Date(pollClosingTime).getTime();
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+
+            if (distance < 0) {
+                clearInterval(x);
+                // Display that the poll is closed
+                document.getElementById("poll-status").innerText = "This poll is closed.";
+                // Disable the form submission
+                document.getElementById("vote-form").style.display = "none";
+
+                send a post request to the views to call the poll closed function
+
+            } else {
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown-" + pollId).innerHTML =
+                    days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+            }
+        }, 1000);
+    }
+
+    // Call countDown function
+    countDown("{{ poll.closed_at|date:'Y-m-d H:i:s' }}", {{ poll.id }});
+</script>
+
+<body>
+    <h1>{{ poll.title }}</h1>
+
+    <p id="poll-status">
+        {% if poll.is_closed %}
+            This poll is closed.
+        {% else %}
+            This poll is still open.
+        {% endif %}
+    </p>
+
+    {% if not poll.is_closed %}
+        <form method="POST" id="vote-form">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Render the form options dynamically -->
+            <button type="submit">Submit Vote</button>
+        </form>
+    {% endif %}
+
+    <div id="countdown-{{ poll.id }}"></div>
+
+    <!-- JavaScript Code Goes Here -->
+
+</body>

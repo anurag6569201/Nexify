@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submissions for {{ form.title }}</title>
+    <link rel="stylesheet" href="{% static 'assets/css/forms/form_responses.css' %}">
 </head>
 <body>
     <h1>Submissions for {{ form.title }}</h1>
@@ -15,7 +17,17 @@
             <p>Submitted on: {{ response.created_at }}</p>
             <ul>
                 {% for answer in response.answers.all %}
-                    <li><strong>{{ answer.question.text }}:</strong> {{ answer.answer_text }}</li>
+                    <li>
+                        <strong>{{ answer.question.text }}:</strong> 
+                        {% if answer.answer_text %}
+                            {{ answer.answer_text }}
+                        {% endif %}
+                        
+                        {% if answer.answer_image %}
+                            <br>
+                            <img src="{{ answer.answer_image.url }}" alt="Uploaded Image" width="200" height="auto">
+                        {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
             <hr>
@@ -24,6 +36,7 @@
         <p>No submissions have been made for this form yet.</p>
     {% endif %}
 
-    <a href="{% url 'form_list' %}">Back to Forms List</a>
+    <a href="{% url 'view_forms' %}">Back to Forms List</a>
 </body>
 </html>
+

@@ -1,0 +1,56 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/polls/create_poll.css' %}">
+</head>
+
+<h1>Create a New Poll</h1>
+<form method="post" id="poll-form">
+    {% csrf_token %}
+    
+    <div class="title-container">
+        {{ form.title.label_tag }} {{ form.title }}
+    </div>
+
+    <div id="options-container">
+        <!-- Poll Date and Time Selection as a Single Field -->
+        <div>
+            <label for="closed_at">Select Poll Closing Date and Time:</label>
+            <input type="datetime-local" id="closed_at" name="closed_at" required>
+        </div>
+
+        <!-- Poll Options -->  
+        <label for="options">Options:</label>
+        <input type="text" name="options" class="option-input">
+    </div>
+
+    <!-- Button to Add New Options -->
+    <button type="button" onclick="addOption()">Add Another Option</button>
+    <br><br>
+    <button type="submit">Create Poll</button>
+</form>
+
+<script>
+    function addOption() {
+        const container = document.getElementById('options-container');
+        
+        // Create a new input field for an option
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'options';
+        input.classList.add('option-input');
+
+        // Create a remove button for this input
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.textContent = 'Remove Option';
+        removeButton.onclick = () => {
+            container.removeChild(input);
+            container.removeChild(removeButton);
+        };
+
+        // Add the input and the remove button to the container
+        container.appendChild(input);
+        container.appendChild(removeButton);
+    }
+</script>

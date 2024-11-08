@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Forms</title>
+    <link rel="stylesheet" href="{% static 'assets/css/forms/view_forms.css' %}">
+</head>
+<body>
+    <h1>What you want to host 👋</h1>
+
+    {% for form_type, forms in grouped_forms.items %}
+        <section class="form-type-group {% if form_type == 'engaging' %}engaging-section{% else %}hiring-section{% endif %}">
+            <h2 class="form-type-title">{{ form_type|capfirst }} Forms</h2>
+            <ul class="form-list">
+                {% for form in forms %}
+                    <li class="form-card">
+                        {% if form.image %}
+                            <img src="{{ form.image.url }}" alt="{{ form.title }} image" class="form-image">
+                        {% else %}
+                            <img src="https://via.placeholder.com/50" alt="Default image" class="form-image">
+                        {% endif %}
+                        
+                        <div class="form-content">
+                            <a href="{% url 'form_detail' form.id %}" class="form-title">{{ form.title|slice:":21"}}{% if form.title|length > 21 %}...{% endif %}</a>
+                            <p class="form-description">
+                                {{ form.description|slice:":30" }}{% if form.description|length > 30 %}...{% endif %}
+                            </p>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li>No forms available for this type</li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endfor %}
+
+    <a href="{% url 'create_form' %}" class="add-form-button">+</a>
+</body>
+</html>

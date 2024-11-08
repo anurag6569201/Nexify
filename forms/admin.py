@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Form, Question, Response, Answer
 
+
 @admin.register(Form)
 class FormAdmin(admin.ModelAdmin):
     list_display = ('title', 'description')

@@ -1,0 +1,138 @@
+/* General Reset */
+body, ul, h1, h2, p {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f8f9fc;
+    padding: 13.5px; /* Reduced padding by 10% */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Main title styling */
+h1 {
+    color: #1a1a1a;
+    font-size: 19.8px; /* Reduced font size by 10% */
+    margin-bottom: 13.5px; /* Reduced margin by 10% */
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Container for each form type group */
+.form-type-group {
+    width: 100%;
+    max-width: 900px; /* Reduced max width by 10% */
+    margin-bottom: 22.5px; /* Reduced margin by 10% */
+    padding: 13.5px; /* Reduced padding by 10% */
+    border-radius: 8px;
+    box-shadow: 0 2px 5.4px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjusted width for the hiring-section */
+.hiring-section {
+    max-width: 765px; /* Reduced max width by 10% */
+    background-color: #e1edff;
+}
+
+/* Different background colors for each category */
+.engaging-section {
+    background-color: #fff3e0;
+}
+
+/* Form type title */
+h2 {
+    font-size: 16.2px; /* Reduced font size by 10% */
+    color: #0056b3;
+    margin-bottom: 9px; /* Reduced margin by 10% */
+    font-weight: bold;
+}
+
+/* Styling for the form list */
+.form-list {
+    display: grid;
+    gap: 13.5px; /* Reduced gap by 10% */
+    grid-template-columns: repeat(auto-fit, minmax(234px, 1fr)); /* Adjusted min width */
+    width: 100%;
+    list-style: none;
+    padding: 0;
+}
+
+/* Styling for each form card */
+.form-card {
+    background: #ffffff;
+    border-radius: 8px;
+    max-width: 219px; /* Reduced max-width by 10% */
+    box-shadow: 0 2px 5.4px rgba(0, 0, 0, 0.1);
+    padding: 13.5px; /* Reduced padding by 10% */
+    text-align: left;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.form-card:hover {
+    transform: translateY(-2.7px); /* Reduced hover effect by 10% */
+}
+
+/* Form image styling */
+.form-image {
+    width: 36px; /* Reduced size by 10% */
+    height: 36px;
+    margin-right: 9px; /* Reduced margin by 10% */
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* Form content */
+.form-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-title {
+    font-size: 14.4px; /* Reduced font size by 10% */
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+    margin-bottom: 4.5px; /* Reduced margin by 10% */
+    transition: color 0.2s;
+}
+
+.form-title:hover {
+    color: #0056b3;
+}
+
+.form-description {
+    font-size: 10.8px; /* Reduced font size by 10% */
+    color: #6c757d;
+    line-height: 1.17;
+}
+
+/* Add form button styling */
+.add-form-button {
+    position: fixed;
+    bottom: 13.5px; /* Reduced size by 10% */
+    right: 13.5px; /* Reduced size by 10% */
+    background-color: #007bff;
+    color: #ffffff;
+    border-radius: 50%;
+    width: 40.5px; /* Reduced size by 10% */
+    height: 40.5px; /* Reduced size by 10% */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19.8px; /* Reduced font size by 10% */
+    text-decoration: none;
+    box-shadow: 0 2.7px 7.2px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.add-form-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.045); /* Reduced scale by 10% */
+}

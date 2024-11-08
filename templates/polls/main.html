@@ -1,0 +1,75 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/polls/main.css' %}">
+</head>
+
+<h1>All Polls</h1>
+
+{% if polls %}
+    <ul class="poll-list">
+        {% for poll in polls %}
+            <li class="poll-item">
+                <strong>{{ poll.title }}</strong>
+                <ul class="option-list">
+                    {% for option in poll.options.all %}
+                        <li>{{ option.text }}</li>
+                    {% endfor %}
+                </ul>
+                
+                {% if poll.closed_at %}
+                    <p>Closes on: {{ poll.closed_at|date:"Y-m-d H:i" }}</p>
+                    <div id="countdown-{{ poll.id }}" class="countdown"></div>
+                    {% if poll.is_closed %}
+                        <p>This poll is closed.</p>
+                    {% else %}
+                        <p id="open_pole_text">This poll is still open.</p>
+                    {% endif %}
+                {% endif %}
+                
+                <div class="poll-actions">
+                    <a href="{% url 'view_poll' poll.id %}">View Poll</a> |
+                    <a href="{% url 'vote_poll' poll.id %}">Vote</a> |
+                    <a href="{% url 'poll_results' poll.id %}">View Results</a> |
+                    <a href="{% url 'delete_poll' poll.id %}" onclick="return confirm('Are you sure you want to delete this poll?')">Delete Poll</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls available.</p>
+{% endif %}
+
+<a href="{% url 'create_poll' %}" class="create-poll-btn">Create a New Poll</a>
+
+<script>
+    // Countdown Timer Function
+    function countDown(pollClosingTime, pollId) {
+        var countDownDate = new Date(pollClosingTime).getTime();
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown-" + pollId).innerHTML = "The poll has closed.";
+                document.getElementById("open_pole_text").style.display = "None";
+            } else {
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown-" + pollId).innerHTML =
+                    days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+            }
+        }, 1000);
+    }
+
+    // Call countDown function for each poll that has a closing time
+    {% for poll in polls %}
+        {% if poll.closed_at %}
+            countDown("{{ poll.closed_at|date:'Y-m-d H:i:s' }}", {{ poll.id }});
+        {% endif %}
+    {% endfor %}
+</script>

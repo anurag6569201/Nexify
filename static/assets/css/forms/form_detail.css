@@ -1,0 +1,207 @@
+/* Reset some default styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px; /* Reduced padding by 20% */
+}
+
+h1 {
+    color: #333;
+    font-size: 19.2px; /* Reduced font-size by 20% */
+    margin-bottom: 8px; /* Reduced margin */
+    text-align: center;
+}
+
+/* Form container styling */
+form {
+    width: 100%;
+    max-width: 960px; /* Reduced max-width by 20% */
+    background-color: #ffffff;
+    border-radius: 8px; /* Reduced border-radius */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px; /* Reduced padding by 20% */
+    margin-top: 16px; /* Reduced margin */
+}
+
+/* Image styling for form image */
+form img {
+    display: block;
+    margin: 0 auto;
+    width: 80%; /* Reduced image width by 20% */
+    max-width: 240px; /* Reduced max-width */
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 16px; /* Reduced margin */
+    object-fit: cover;
+}
+
+p {
+    font-size: 14.4px; /* Reduced font-size by 20% */
+    color: #6c757d;
+    margin-bottom: 6.4px; /* Reduced margin */
+}
+
+/* Styling for each question */
+form div {
+    margin-bottom: 12px; /* Reduced margin-bottom */
+}
+
+form div p {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 4px; /* Reduced margin */
+    font-weight: 600;
+}
+
+form div label {
+    color: #333;
+    margin-bottom: 2.4px; /* Reduced margin */
+    font-size: 14.4px; /* Reduced font-size by 20% */
+}
+
+/* Container for centering the button */
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+/* Button styling */
+form button {
+    padding: 8px 16px; /* Reduced padding by 20% */
+    border: none;
+    width: 100%;
+    max-width: 560px; /* Reduced max-width by 20% */
+    border-radius: 6.4px; /* Reduced border-radius */
+    background-color: #007bff;
+    color: #fff;
+    font-size: 14.4px; /* Reduced font-size by 20% */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Input and textarea styling */
+input[type="text"],
+textarea,
+select,
+input[type="datetime-local"],
+input[type="file"] {
+    width: 100%;
+    padding: 8px; /* Reduced padding by 20% */
+    border: 1px solid #e3e4e8;
+    border-radius: 6.4px; /* Reduced border-radius */
+    background-color: #f9fafb;
+    font-size: 11.2px; /* Reduced font-size by 20% */
+    color: #333;
+    margin-top: 6.4px; /* Reduced margin */
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus,
+input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+}
+
+/* Radio buttons and labels */
+label {
+    display: block;
+    font-size: 11.2px; /* Reduced font-size by 20% */
+    color: #333;
+    margin-bottom: 4px; /* Reduced margin */
+    cursor: pointer;
+}
+
+input[type="radio"] {
+    margin-right: 4px; /* Reduced margin */
+}
+
+/* Submit button styling */
+button[type="submit"] {
+    width: 100%;
+    padding: 8px;
+    background-color: #007bff;
+    color: white;
+    font-size: 12.8px; /* Reduced font-size by 20% */
+    font-weight: bold;
+    border: none;
+    border-radius: 6.4px; /* Reduced border-radius */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 8px; /* Reduced margin */
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Link to submissions view */
+a {
+    display: inline-block;
+    margin-top: 16px; /* Reduced margin-top */
+    color: #007bff;
+    text-decoration: none;
+    font-size: 11.2px; /* Reduced font-size by 20% */
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Styling for the image upload container */
+.image-container {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 8px; /* Reduced padding by 20% */
+    background-color: #f9fafb;
+    border: 2px dashed #e3e4e8;
+    border-radius: 6.4px; /* Reduced border-radius */
+    margin-bottom: 2.4px; /* Reduced margin */
+}
+
+.image-container input[type="file"] {
+    cursor: pointer;
+    padding: 6.4px 9.6px; /* Reduced padding by 20% */
+    font-size: 11.2px; /* Reduced font-size by 20% */
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Reduced border-radius */
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+    width: auto;
+}
+
+.image-container input[type="file"]:hover {
+    background-color: #f0f4f8;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.image-container:hover {
+    background-color: #f0f4f8;
+    border-color: #007bff;
+}
+
+.form {
+    margin: 80px; /* Reduced margin */
+}

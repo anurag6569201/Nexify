@@ -1,0 +1,18 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/polls/poll_closed.css' %}">
+</head>
+
+<h1>{{ poll.title }}</h1>
+<p>This poll is now closed and no further responses can be submitted.</p>
+<p> Closing time: {{closed_at}} </p>
+
+{% if winner %}
+    <p><strong>Winner:</strong> {{ winner.text }} with {{ winner.votes }} votes.</p>
+{% else %}
+    <p>No votes were cast in this poll.</p>
+{% endif %}
+
+
+<a href="{% url 'poll_results' poll.id %}">View Results</a>

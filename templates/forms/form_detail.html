@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ form.title }}</title>
+    <link rel="stylesheet" href="{% static 'assets/css/forms/form_detail.css' %}">
 </head>
 <body>
+
     <h1>{{ form.title }}</h1>
     <p>{{ form.description }}</p>
 
-    <form method="post" action="">
+    <form method="post" action="" enctype="multipart/form-data">
+        <div class = "form" >
+        {%if form.image%}
+            <img src={{form.image.url}} />
+        {%endif%}
         {% csrf_token %}
 
         {% for question in questions %}
@@ -26,7 +33,7 @@
 
                 {% elif question.question_type == 'MC' %}
                     <!-- Multiple Choice (Radio Buttons) -->
-                    {% for choice in question.split_choices %}
+                    {% for choice in question.get_choices %}
                         <label>
                             <input type="radio" name="question_{{ question.id }}" value="{{ choice }}" required>
                             {{ choice }}
@@ -37,7 +44,7 @@
                     <!-- Dropdown (Select Option) -->
                     <select name="question_{{ question.id }}" required>
                         <option value="">Select an option</option>
-                        {% for choice in question.split_choices %}
+                        {% for choice in question.get_choices %}
                             <option value="{{ choice }}">{{ choice }}</option>
                         {% endfor %}
                     </select><br>
@@ -46,15 +53,27 @@
                     <!-- Date and Time (Datetime Picker) -->
                     <input type="datetime-local" name="question_{{ question.id }}" required><br>
                 
+
+                {% elif question.question_type == 'IMG' %}
+                    <!-- Image Upload (File Input) -->
+                    <div class="image-container" > 
+                        <input type="file" name="question_{{ question.id }}" required><br>
+                    </div>
+                    
+
                 {% else %}
                     <p>Unknown question type.</p>
                 {% endif %}
             </div>
         {% endfor %}
 
-        <button type="submit">Submit</button>
+        <div class="button-container">
+            <button type="submit">Submit</button>
+        </div>
+    </div>
     </form>
 
     <a href="{% url 'form_responses' form.id %}">View Submissions</a> <!-- Link to submissions view -->
+    <a href="{% url 'view_forms' %}">View Form</a> <!-- Link to submissions view -->
 </body>
 </html>

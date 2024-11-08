@@ -1,0 +1,146 @@
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+    padding: 15px; /* Reduced padding by an additional 5% */
+    max-width: 912px; /* Reduced max-width by an additional 5% */
+    margin: 0 auto;
+}
+
+/* Header */
+h1 {
+    font-size: 1.9rem; /* Reduced font-size by an additional 5% */
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 11px; /* Reduced margin-bottom by an additional 5% */
+    text-align: center;
+}
+
+p {
+    font-size: 0.84rem; /* Reduced font-size by an additional 5% */
+    color: #7f8c8d;
+    text-align: center;
+    margin-bottom: 22px; /* Reduced margin-bottom by an additional 5% */
+}
+
+/* Submission Section */
+h2 {
+    font-size: 1.36rem; /* Reduced font-size by an additional 5% */
+    font-weight: 500;
+    color: #34495e;
+    margin-top: 22px; /* Reduced margin-top by an additional 5% */
+    margin-bottom: 11px; /* Reduced margin-bottom by an additional 5% */
+}
+
+/* List styling for each submission */
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px; /* Reduced padding by an additional 5% */
+    margin-bottom: 15px; /* Reduced margin-bottom by an additional 5% */
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1); /* Reduced box-shadow size by an additional 5% */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+li:hover {
+    transform: translateY(-3.8px); /* Reduced translateY value by an additional 5% */
+    box-shadow: 0 7.6px 15.2px rgba(0, 0, 0, 0.15); /* Reduced box-shadow size by an additional 5% */
+}
+
+/* Bold question text */
+strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Image Styling */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 7px; /* Reduced margin-top by an additional 5% */
+}
+
+/* Response Timestamp */
+p:last-child {
+    font-size: 0.76rem; /* Reduced font-size by an additional 5% */
+    color: #95a5a6;
+    margin-top: 7.6px; /* Reduced margin-top by an additional 5% */
+    text-align: right;
+}
+
+/* Empty Submission Message */
+.no-submissions {
+    font-size: 0.91rem; /* Reduced font-size by an additional 5% */
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 30px; /* Reduced margin-top by an additional 5% */
+    font-weight: bold;
+}
+
+/* Button for Back to Forms */
+a {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    padding: 9.5px 15.2px; /* Reduced padding by an additional 5% */
+    font-size: 0.84rem; /* Reduced font-size by an additional 5% */
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-top: 15.2px; /* Reduced margin-top by an additional 5% */
+    text-align: center;
+    width: 100%;
+    max-width: 152px; /* Reduced max-width by an additional 5% */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+a:hover {
+    background-color: #2980b9;
+}
+
+a:active {
+    background-color: #1f618d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 11.4px; /* Reduced padding by an additional 5% */
+    }
+
+    h1 {
+        font-size: 1.52rem; /* Reduced font-size by an additional 5% */
+    }
+
+    h2 {
+        font-size: 1.22rem; /* Reduced font-size by an additional 5% */
+    }
+
+    p {
+        font-size: 0.76rem; /* Reduced font-size by an additional 5% */
+    }
+
+    li {
+        padding: 11.4px; /* Reduced padding by an additional 5% */
+    }
+
+    a {
+        font-size: 0.76rem; /* Reduced font-size by an additional 5% */
+        padding: 7.6px 11.4px; /* Reduced padding by an additional 5% */
+    }
+}

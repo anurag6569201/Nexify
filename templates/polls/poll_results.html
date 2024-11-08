@@ -1,0 +1,18 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/polls/poll_results.css' %}">
+</head>
+
+<h1>{{ poll.title }} - Results</h1>
+{% if poll.is_closed %}
+    <p>This poll is closed.</p>
+{% else %}
+    <p>This poll is still open.</p>
+{% endif %}
+<ul>
+    {% for result in results %}
+        <li>{{ result.option }}: {{ result.votes }} votes ({{ result.percentage }}%)</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'view_poll' poll.id %}">Back to Poll</a>

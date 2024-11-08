@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'assets/css/forms/form_list.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form List</title>
@@ -11,10 +13,10 @@
     <ul>
         {% for form in forms %}
             <li>
-                <a href="{% url 'form_detail' form.id %}">{{ form.title }}</a> |
-                <a href="{% url 'form_responses' form.id %}">View Submissions</a> |
-                <a href="{% url 'add_questions' form.id %}">Add questions</a> |
-                <a href="{% url 'view_all_questions' form.id %}">View All Questions</a> |
+                <a href="{% url 'form_detail' form.id %}">{{ form.title }}</a> 
+                <a href="{% url 'form_responses' form.id %}">View Submissions</a> 
+                <a href="{% url 'add_questions' form.id %}">Add questions</a> 
+                <a href="{% url 'view_all_questions' form.id %}">View All Questions</a> 
                 
                 <!-- Delete Form Button -->
                 <form action="{% url 'delete_form' form.id %}" method="post" style="display:inline;">

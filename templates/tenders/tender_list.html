@@ -1,0 +1,29 @@
+{% extends 'tenders/base.html' %}
+
+{% block title %}Tenders List{% endblock %}
+
+{% block content %}
+    <h2>Tender List</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tender Name</th>
+                <th>Tender ID</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tender in tenders %}
+                <tr>
+                    <td>{{ tender.tender_name }}</td>
+                    <td>{{ tender.tender_id }}</td>
+                    <td>{{ tender.end_date }}</td>
+                    <td>
+                        <a href="{% url 'tender_detail' tender.id %}">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

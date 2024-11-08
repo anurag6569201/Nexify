@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'assets/css/forms/add_questions.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Questions to Form</title>
@@ -15,46 +17,37 @@
         function updateQuestionType(index) {
             const questionType = document.getElementById('question_type_' + index).value;
             const choicesContainer = document.getElementById('choices-container-' + index);
-            const textInput = document.getElementById('text-input-' + index);
-            const longAnswerInput = document.getElementById('long-answer-input-' + index);
-            const dateTimeInput = document.getElementById('date-time-input-' + index);
-
+    
             // Hide all fields initially
             choicesContainer.style.display = 'none';
-            textInput.style.display = 'none';
-            longAnswerInput.style.display = 'none';
-            dateTimeInput.style.display = 'none';
-
+    
             // Show fields based on the selected question type
             if (questionType === 'MC' || questionType === 'DD') {
                 choicesContainer.style.display = 'block'; // Show options for MC or DD
-            } else if (questionType === 'TEXT' || questionType === 'SA') {
-                // Do nothing, no answer field needed during question creation
-            } else if (questionType === 'LA') {
-                // LA: No answer field needed, simply don't show anything for answer part
-                longAnswerInput.style.display = 'none';
-            } else if (questionType === 'DT') {
-                // DT: No answer field needed, simply don't show anything for answer part
-                dateTimeInput.style.display = 'none';
             }
         }
-
+    
         // This function adds a new input field for more choices (MC/DD)
         function addChoiceField(index) {
             const container = document.getElementById('choices-container-' + index);
+            
+            // Create a new choice input field
             const newChoice = document.createElement('input');
             newChoice.type = 'text';
             newChoice.name = 'choice_' + index + '[]'; // Unique name for each choice
-            newChoice.placeholder = 'Option ' + (container.children.length / 2 + 1); // Adjust numbering
-            container.appendChild(newChoice);
-            container.appendChild(document.createElement("br"));
+            newChoice.placeholder = 'Option ' + (container.getElementsByTagName('input').length + 1); // Correct numbering
+            
+            // Append the new choice input field to the container
+            container.insertBefore(newChoice, container.lastElementChild);  // Insert before the "Add another option" button
+            container.insertBefore(document.createElement("br"), container.lastElementChild); // Insert a line break before the button
         }
-
+        
+    
         // This function dynamically adds a new question
         function addQuestion() {
             const questionContainer = document.getElementById('question-containers');
             const index = questionContainer.children.length; // Get the number of existing question containers
-
+    
             // Create new question container HTML
             const newQuestion = document.createElement('div');
             newQuestion.classList.add('question-container');
@@ -63,7 +56,7 @@
                     <label for="question_text_${index}">Question Text:</label>
                     <input type="text" id="question_text_${index}" name="question_text_${index}" required>
                 </div>
-
+    
                 <div class="input-group">
                     <label for="question_type_${index}">Question Type:</label>
                     <select id="question_type_${index}" name="question_type_${index}" onchange="updateQuestionType(${index})" required>
@@ -74,57 +67,44 @@
                         <option value="LA">Long Answer</option>
                         <option value="DD">Dropdown</option>
                         <option value="DT">Date and Time</option>
+                        <option value="IMG">Image</option>
                     </select>
                 </div>
-
+    
                 <!-- Container for Multiple Choice or Dropdown options -->
                 <div id="choices-container-${index}" class="input-group" style="display: none;">
                     <label>Choices:</label>
                     <input type="text" name="choice_${index}[]" placeholder="Option 1"><br>
                     <input type="text" name="choice_${index}[]" placeholder="Option 2"><br>
+                    <input type="text" name="choice_${index}[]" placeholder="Option 3"><br>
+                    <input type="text" name="choice_${index}[]" placeholder="Option 4"><br>
                     <button type="button" onclick="addChoiceField(${index})">Add another option</button>
                 </div>
-
-                <!-- Hidden answer fields for TEXT, SA, LA, and DT questions -->
-                <div id="text-input-${index}" class="input-group" style="display: none;">
-                    <label>Answer:</label>
-                    <!-- This is not visible in the 'Add Question' view -->
-                    <input type="text" name="text_answer_${index}">
-                </div>
-
-                <div id="long-answer-input-${index}" class="input-group" style="display: none;">
-                    <label>Long Answer:</label>
-                    <textarea name="long_answer_${index}" rows="4"></textarea>
-                </div>
-
-                <div id="date-time-input-${index}" class="input-group" style="display: none;">
-                    <label>Date and Time:</label>
-                    <input type="datetime-local" name="date_time_${index}">
-                </div>
-
+    
                 <button type="button" class="remove-question" onclick="removeQuestion(this)">Remove Question</button>
                 <hr>`;
-            
+    
             questionContainer.appendChild(newQuestion);
             updateQuestionType(index); // Ensure the question type logic is applied for the new question
         }
-
+    
         // This function removes a question container
         function removeQuestion(button) {
             const questionContainer = button.parentElement;
             questionContainer.remove();
         }
-
+    
         // Initialize with one question form
         window.onload = function() {
             addQuestion(); // Automatically add the first question on page load
         }
     </script>
+    
 </head>
 <body>
     <h1>Add Multiple Questions to Form: {{ form.title }}</h1>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         
         <div id="question-containers"></div> <!-- Container for all dynamic questions -->
@@ -134,6 +114,8 @@
     </form>
 
     <hr>
-    <a href="{% url 'form_detail' form.id %}">Finish and View Form</a>
+    <div class="buttons-container">
+        <a href="{% url 'form_detail' form.id %}">Finish and View Form</a>
+    </div>
 </body>
 </html>

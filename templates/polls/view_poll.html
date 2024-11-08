@@ -1,0 +1,15 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/polls/view_poll.css' %}">
+</head>
+
+<h1>{{ poll.title }}</h1>
+<ul>
+    {% for option in poll.options.all %}
+        <li>{{ option.text }} - {{ option.votes }} votes</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'vote_poll' poll.id %}">Vote</a>
+<a href="{% url 'poll_results' poll.id %}">Results</a>
+<a href="{% url 'main' %}">Home</a>

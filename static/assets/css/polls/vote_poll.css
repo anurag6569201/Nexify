@@ -1,0 +1,79 @@
+/* static/assets/css/polls/vote_poll.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+}
+
+p {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #7f8c8d;
+}
+
+form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+form button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto 0;
+    width: 50%;
+}
+
+form button:hover {
+    background-color: #2980b9;
+}
+
+form .form-field {
+    margin-bottom: 20px;
+}
+
+form .form-field input[type="radio"] {
+    margin-right: 10px;
+}
+
+form label {
+    font-size: 1.2em;
+}
+
+form .form-field input {
+    font-size: 1em;
+    padding: 10px;
+    margin: 5px 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: block;
+}
+
+form .form-field input[type="radio"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+form .form-field input[type="radio"]:checked {
+    background-color: #3498db;
+}

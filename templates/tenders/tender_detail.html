@@ -1,0 +1,17 @@
+{% extends 'tenders/base.html' %}
+
+{% block title %}Tender Detail{% endblock %}
+
+{% block content %}
+    <h2>{{ tender.tender_name }}</h2>
+    <p><strong>Tender ID:</strong> {{ tender.tender_id }}</p>
+    <p><strong>Issued By:</strong> {{ tender.issued_by }}</p>
+    <p><strong>Description:</strong> {{ tender.description }}</p>
+
+    <h3>Previous Versions</h3>
+    <ul>
+        {% for t in previous_tenders %}
+            <li>{{ t.version }} - {{ t.end_date }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

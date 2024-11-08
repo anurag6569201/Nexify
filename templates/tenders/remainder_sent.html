@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Reminder Sent{% endblock %}
+
+{% block content %}
+<h2>Reminder Sent Successfully</h2>
+<p>A reminder has been sent for tender: {{ tender.tender_name }}</p>
+<p>Email reminder will be sent to: {{ tender.reminder_email }}</p>
+<a href="{% url 'tender_list' %}" class="btn btn-primary">Back to Tenders</a>
+{% endblock %}

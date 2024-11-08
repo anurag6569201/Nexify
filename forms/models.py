@@ -3,8 +3,10 @@ from django.core.exceptions import ValidationError
 from datetime import datetime
 
 class Form(models.Model):
+    form_type = models.CharField(max_length=40, default  = 'miscillineous')
     title = models.CharField(max_length=255)
     description = models.TextField()
+    image = models.ImageField(upload_to='form_images/', blank=True, null=True)  # Store image file path
 
     def __str__(self):
         return self.title
@@ -16,6 +18,7 @@ class Question(models.Model):
     LONG_ANSWER = 'LA'
     DROP_DOWN = 'DD'
     DATE_TIME = 'DT'
+    IMAGE_TYPE ='IMG'
 
     QUESTION_TYPES = [
         (TEXT, 'Text'),
@@ -24,12 +27,14 @@ class Question(models.Model):
         (LONG_ANSWER, 'Long Answer'),
         (DROP_DOWN, 'Dropdown'),
         (DATE_TIME, 'Date and Time'),
+        (IMAGE_TYPE, 'Image'),
     ]
 
     form = models.ForeignKey(Form, related_name='questions', on_delete=models.CASCADE)
     text = models.CharField(max_length=255)
     question_type = models.CharField(choices=QUESTION_TYPES, max_length=20, default=TEXT)
     choices = models.TextField(blank=True, null=True)  # Store choices as comma-separated values
+    image = models.ImageField(upload_to='question_images/', blank=True, null=True)  # Store image file path
 
     def __str__(self):
         return self.text
@@ -51,6 +56,7 @@ class Answer(models.Model):
     response = models.ForeignKey(Response, related_name='answers', on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
     answer_text = models.TextField(blank=True, null=True)  # Store the answer as text, regardless of question type
+    answer_image = models.ImageField(upload_to='uploads/', blank=True, null=True)  # New field for images
 
     def __str__(self):
         return f'Answer to {self.question.text}'
@@ -65,3 +71,5 @@ class Answer(models.Model):
                 datetime.strptime(self.answer_text, '%Y-%m-%d %H:%M:%S')
             except ValueError:
                 raise ValidationError("Invalid date and time format. Use 'YYYY-MM-DD HH:MM:SS' format.")
+
+

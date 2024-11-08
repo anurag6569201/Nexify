@@ -1,0 +1,88 @@
+/* static/assets/css/polls/main.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.poll-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.poll-item {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.poll-item:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.option-list {
+    list-style: none;
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.option-list li {
+    margin-bottom: 8px;
+}
+
+.countdown {
+    font-weight: bold;
+    color: #e74c3c;
+    margin-top: 10px;
+}
+
+.poll-actions {
+    margin-top: 20px;
+}
+
+.poll-actions a {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.poll-actions a:hover {
+    background-color: #2980b9;
+}
+
+.poll-actions a:last-child {
+    margin-right: 0;
+}
+
+.create-poll-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #27ae60;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.create-poll-btn:hover {
+    background-color: #2ecc71;
+}

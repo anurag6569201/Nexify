@@ -1,0 +1,251 @@
+/* Reset some default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.4;
+    padding: 8px; /* Further reduced padding */
+    max-width: 800px; /* Reduced max width */
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 1.4rem; /* Further reduced font size */
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px; /* Reduced margin */
+    text-align: center;
+}
+
+form {
+    background-color: #fff;
+    padding: 8px; /* Further reduced padding */
+    border-radius: 4px; /* Reduced border radius */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+    max-width: 700px; /* Further reduced max-width */
+    margin: 0 auto; /* Centered form */
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 12px 0; /* Reduced margin */
+}
+
+/* Input and Select fields styling */
+.input-group {
+    margin-bottom: 1em; /* Reduced bottom margin */
+}
+
+.input-group label {
+    font-size: 0.85rem; /* Reduced font size */
+    font-weight: bold;
+    color: #34495e;
+    display: block;
+    margin-bottom: 3px; /* Reduced margin */
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 4px 6px; /* Further reduced padding */
+    border-radius: 4px; /* Reduced border radius */
+    border: 1px solid #ccc;
+    font-size: 0.8rem; /* Reduced font size */
+    color: #555;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* Dynamic Question Containers */
+.question-container {
+    border: 1px solid #ccc;
+    padding: 6px; /* Reduced padding */
+    margin-bottom: 10px; /* Reduced margin */
+    background-color: #fafafa;
+    border-radius: 4px; /* Reduced border radius */
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+}
+
+.remove-question {
+    color: red;
+    cursor: pointer;
+    font-size: 0.75rem; /* Further reduced font size */
+    font-weight: bold;
+    margin-top: 5px; /* Reduced margin */
+}
+
+.remove-question:hover {
+    color: #e74c3c;
+}
+
+/* Choices container for MC and DD question types */
+.choices-container {
+    margin-top: 6px; /* Reduced margin */
+    display: none;
+}
+
+.choices-container input {
+    margin-bottom: 4px; /* Reduced margin */
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Reduced border radius */
+    font-size: 0.75rem; /* Further reduced font size */
+}
+
+.choices-container button {
+    background-color: #3498db;
+    color: white;
+    padding: 6px 10px; /* Reduced padding */
+    font-size: 0.75rem; /* Further reduced font size */
+    border: none;
+    border-radius: 4px; /* Reduced border radius */
+    cursor: pointer;
+}
+
+.choices-container button:hover {
+    background-color: #2980b9;
+}
+
+/* Add and Save Buttons */
+button[type="button"],
+button[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    padding: 6px 10px; /* Reduced padding */
+    font-size: 0.85rem; /* Reduced font size */
+    border: none;
+    border-radius: 4px; /* Reduced border radius */
+    cursor: pointer;
+    margin-top: 12px; /* Reduced margin */
+    width: 100%;
+    max-width: 140px; /* Further reduced max-width */
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button[type="button"]:hover,
+button[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+button[type="button"]:active,
+button[type="submit"]:active {
+    background-color: #1f618d;
+}
+
+/* Links */
+a {
+    display: inline-block;
+    background-color: #2ecc71;
+    color: white;
+    padding: 6px 10px; /* Reduced padding */
+    font-size: 0.85rem; /* Reduced font size */
+    text-decoration: none;
+    border-radius: 4px; /* Reduced border radius */
+    margin-top: 12px; /* Reduced margin */
+    text-align: center;
+    width: 100%;
+    max-width: 140px; /* Reduced max-width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+a:hover {
+    background-color: #27ae60;
+}
+
+a:active {
+    background-color: #1f8446;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 4px; /* Further reduced padding */
+    }
+
+    h1 {
+        font-size: 1.2rem; /* Further reduced font size */
+    }
+
+    .input-group input,
+    .input-group select {
+        font-size: 0.75rem; /* Further reduced font size */
+    }
+
+    button[type="button"],
+    button[type="submit"],
+    a {
+        font-size: 0.75rem; /* Further reduced font size */
+        padding: 4px 8px; /* Further reduced padding */
+    }
+}
+
+/* Container for Finish and View buttons */
+.buttons-container {
+    display: flex;
+    justify-content: space-between; /* Space buttons apart */
+    gap: 12px; /* Space between the buttons */
+    margin-top: 12px; /* Space from previous elements */
+}
+
+/* Button styling */
+button[type="button"],
+button[type="submit"],
+a {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 20px; /* Increased padding for bigger buttons */
+    font-size: 0.9rem; /* Slightly larger font */
+    border: none;
+    border-radius: 4px; /* Consistent border radius */
+    cursor: pointer;
+    width: 48%; /* Make the buttons take equal width */
+    max-width: 200px; /* Maximum width */
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Button hover states */
+button[type="button"]:hover,
+button[type="submit"]:hover,
+a:hover {
+    background-color: #2980b9;
+}
+
+button[type="button"]:active,
+button[type="submit"]:active,
+a:active {
+    background-color: #1f618d;
+}
+
+/* Responsive design tweaks for buttons */
+@media (max-width: 768px) {
+    .buttons-container {
+        flex-direction: column; /* Stack buttons vertically on small screens */
+        align-items: center; /* Center the buttons */
+    }
+
+    button[type="button"],
+    button[type="submit"],
+    a {
+        width: 100%; /* Full width on small screens */
+        max-width: none; /* Remove the max-width for responsiveness */
+        margin-top: 8px; /* Space between stacked buttons */
+    }
+}
+
