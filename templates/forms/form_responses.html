@@ -5,6 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submissions for {{ form.title }}</title>
+    <style>
+        body {
+            background-color: #0c1117;
+            color: rgb(213, 211, 211);
+            font-family: 'Arial', sans-serif;
+        }
+    
+        h2 {
+            color: white;
+            text-align: center;
+        }
+    
+        p {
+            color: rgb(213, 211, 211);
+            font-size: 1.2em;
+            text-align: center;
+        }
+    
+        .btn {
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+        }
+    
+        .btn:hover {
+            background-color: #16a085;
+        }
+    </style>
+    
     <link rel="stylesheet" href="{% static 'assets/css/forms/form_responses.css' %}">
 </head>
 <body>

@@ -1,7 +1,41 @@
 {% extends 'tenders/base.html' %}
 
 {% block title %}Tender Detail{% endblock %}
+<style>
+    body {
+        background-color: #0c1117;
+        color: rgb(213, 211, 211);
+        font-family: 'Arial', sans-serif;
+    }
 
+    h2 {
+        color: white;
+        text-align: center;
+    }
+
+    p {
+        color: rgb(213, 211, 211);
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    .btn {
+        background-color: #1abc9c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: block;
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    .btn:hover {
+        background-color: #16a085;
+    }
+</style>
 {% block content %}
     <h2>{{ tender.tender_name }}</h2>
     <p><strong>Tender ID:</strong> {{ tender.tender_id }}</p>

@@ -5,6 +5,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Forms</title>
+    <style>
+        body {
+            background-color: #0c1117;
+            color: rgb(213, 211, 211);
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+        }
+
+        .form-type-group {
+            margin-top: 30px;
+        }
+
+        .form-type-title {
+            font-size: 1.5em;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .form-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .form-card {
+            background-color: #1b1f26;
+            border: 1px solid #a19f9f;
+            border-radius: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .form-image {
+            max-width: 50px;
+            height: auto;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+
+        .form-content {
+            flex: 1;
+        }
+
+        .form-title {
+            color: #299afd;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-decoration: none;
+        }
+
+        .form-title:hover {
+            text-decoration: underline;
+            color: #a19f9f;
+        }
+
+        .form-description {
+            color: rgb(213, 211, 211);
+            font-size: 1em;
+        }
+
+        .add-form-button {
+            display: inline-block;
+            text-align: center;
+            background-color: #1abc9c;
+            color: #fff;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 2em;
+            font-weight: bold;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-form-button:hover {
+            background-color: #16a085;
+        }
+
+        a {
+            text-decoration: none;
+            color: #299afd;
+        }
+
+        a:hover {
+            color: #a19f9f;
+        }
+    </style>
     <link rel="stylesheet" href="{% static 'assets/css/forms/view_forms.css' %}">
 </head>
 <body>

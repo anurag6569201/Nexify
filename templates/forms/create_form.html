@@ -1,7 +1,73 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'assets/css/forms/create_form.css' %}">
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create Form</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'assets/css/forms/create_form.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Form</title>
+    <style>
+        /* Apply the provided theme */
+        body {
+            background-color: #0c1117;
+            color: rgb(213, 211, 211);
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: white;
+        }
+        .question-container {
+            background-color: #0c1117;
+            border: 1px solid #a19f9f;
+            border-radius: 1rem;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: rgb(213, 211, 211);
+        }
+        .input-group {
+            margin-bottom: 1em;
+        }
+        .input-group label {
+            color: rgb(213, 211, 211);
+            display: block;
+            margin-bottom: 0.5em;
+        }
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border-radius: 5px;
+            border: 1px solid #a19f9f;
+            background-color: #1b1f26;
+            color: white;
+        }
+        button {
+            border: 1px solid #a19f9f;
+            border-radius: 5px;
+            color: white;
+            background-color: #0c1117;
+            padding: 0.5em 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #299afd;
+        }
+        .remove-question {
+            color: red;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create a New Form</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Form</button>
+    </form>
+</body>
+</html>

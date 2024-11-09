@@ -6,6 +6,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Questions for {{ form.title }}</title>
+    <style>
+        body {
+            background-color: #0c1117;
+            color: rgb(213, 211, 211);
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+        }
+
+        p {
+            text-align: center;
+            color: rgb(213, 211, 211);
+            font-size: 1.1em;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #1b1f26;
+            border: 1px solid #a19f9f;
+            border-radius: 5px;
+            margin: 10px 0;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: rgb(213, 211, 211);
+        }
+
+        img {
+            max-width: 200px;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #299afd;
+            font-weight: bold;
+            margin-right: 10px;
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #a19f9f;
+        }
+
+        button {
+            background-color: transparent;
+            border: none;
+            color: red;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        button:hover {
+            color: darkred;
+        }
+
+        a[href*="create_form"] {
+            display: block;
+            text-align: center;
+            background-color: #1abc9c;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        a[href*="create_form"]:hover {
+            background-color: #16a085;
+        }
+    </style>
+    
 </head>
 <body>
     <h1>Questions for {{ form.title }}</h1>

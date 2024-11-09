@@ -1,7 +1,47 @@
 {% extends 'tenders/base.html' %}
 
 {% block title %}Edit Tender{% endblock %}
+<style>
+    body {
+        background-color: #0c1117;
+        color: rgb(213, 211, 211);
+        font-family: 'Arial', sans-serif;
+    }
 
+    .navbar {
+        background-color: #1c2128;
+    }
+
+    .navbar-nav .nav-link {
+        color: rgb(213, 211, 211);
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: #299afd;
+    }
+
+    .container {
+        margin-top: 40px;
+    }
+
+    h1, h2, h3 {
+        color: white;
+    }
+
+    .btn {
+        background-color: #1abc9c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #16a085;
+    }
+</style>
 {% block content %}
 <h2>Edit Tender</h2>
 <form method="POST" enctype="multipart/form-data">

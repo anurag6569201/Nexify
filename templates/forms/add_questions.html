@@ -11,6 +11,60 @@
         .choices-container { display: none; }
         .question-container { border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; }
         .remove-question { color: red; cursor: pointer; }
+        /* Apply the provided theme */
+        body {
+            background-color: #0c1117;
+            color: rgb(213, 211, 211);
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: white;
+        }
+        .question-container {
+            background-color: #0c1117;
+            border: 1px solid #a19f9f;
+            border-radius: 1rem;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: rgb(213, 211, 211);
+        }
+        .input-group {
+            margin-bottom: 1em;
+        }
+        .input-group label {
+            color: rgb(213, 211, 211);
+            display: block;
+            margin-bottom: 0.5em;
+        }
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border-radius: 5px;
+            border: 1px solid #a19f9f;
+            background-color: #1b1f26;
+            color: white;
+        }
+        button {
+            border: 1px solid #a19f9f;
+            border-radius: 5px;
+            color: white;
+            background-color: #0c1117;
+            padding: 0.5em 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #299afd;
+        }
+        .remove-question {
+            color: red;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
     </style>
     <script>
         // This function shows/hides input fields based on the selected question type
@@ -114,8 +168,6 @@
     </form>
 
     <hr>
-    <div class="buttons-container">
-        <a href="{% url 'form_detail' form.id %}">Finish and View Form</a>
-    </div>
+
 </body>
 </html>

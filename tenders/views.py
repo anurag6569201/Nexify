@@ -25,29 +25,24 @@ def add_tender(request):
         form = TenderForm(request.POST, request.FILES)
         tender_field_formset = TenderFieldFormSet(request.POST)
 
-        if form.is_valid() and tender_field_formset.is_valid():
+        if form.is_valid() and tender_field_formset.is_valid():  # Check if both the form and formset are valid
             # Save the Tender
             tender = form.save()
 
             # Save the extendable fields
             for tender_field_form in tender_field_formset:
-                field_name = tender_field_form.cleaned_data.get('field_name')
-                field_value = tender_field_form.cleaned_data.get('field_value')
+                if tender_field_form.cleaned_data:  # Check if there is cleaned data
+                    field_name = tender_field_form.cleaned_data.get('field_name')
+                    field_value = tender_field_form.cleaned_data.get('field_value')
 
-                if field_name and field_value:
-                    TenderField.objects.create(tender=tender, field_name=field_name, field_value=field_value)
-
-            # Check if reminder is enabled and if reminder date has arrived
-            if tender.reminder_enabled:
-                reminder_date = tender.end_date - timedelta(days=tender.reminder_period.days)
-                if timezone.now().date() >= reminder_date:
-                    send_reminder_email(tender)
+                    if field_name and field_value:
+                        TenderField.objects.create(tender=tender, field_name=field_name, field_value=field_value)
 
             messages.success(request, "Tender and extendable fields successfully created!")
             return redirect('tender_list')
         else:
-            print("Form is not valid!")
             # Print all errors for debugging
+            print("Form is not valid!")
             print(form.errors)
             print(tender_field_formset.errors)
     else:

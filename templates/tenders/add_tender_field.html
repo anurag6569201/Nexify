@@ -1,6 +1,43 @@
 {% extends 'tenders/base.html' %}
 
 {% block title %}Add Tender{% endblock %}
+<style>
+    body {
+        background-color: #0c1117;
+        color: rgb(213, 211, 211);
+        font-family: 'Arial', sans-serif;
+        margin: 20px;
+        padding: 0;
+        line-height: 1.6;
+    }
+
+    h2 {
+        color: white;
+        text-align: center;
+    }
+
+    h3 {
+        color: white;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn {
+        background-color: #1abc9c;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #16a085;
+    }
+</style>
 
 {% block content %}
     <h2>Add Tender</h2>

@@ -134,6 +134,3 @@ def delete_form(request, form_id):
             return redirect('view_forms')  # Redirect to the form list after deletion
     except Form.DoesNotExist:
         raise Http404("Form not found")
-
-
-
