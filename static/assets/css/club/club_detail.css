@@ -106,7 +106,7 @@
     color: white;
 }
 /* From Uiverse.io by Yaya12085 */
-#modal-body .form {
+#uploadForm .form {
     background-color: #161c27;
     box-shadow: 0 4px 20px #0872cf;
     border: 1px solid rgb(159, 159, 160);
@@ -117,19 +117,19 @@
     max-width: 100%;
 }
 
-#modal-body .form-title {
+#uploadForm .form-title {
     color: #ffffff;
     font-size: 1.8rem;
     font-weight: 500;
 }
 
-#modal-body .form-paragraph {
+#uploadForm .form-paragraph {
     margin-top: 10px;
     font-size: 0.9375rem;
     color: rgb(105, 105, 105);
 }
 
-#modal-body .drop-container {
+#uploadForm .drop-container {
     height: 210px;
     background-color: #5164825f;
     position: relative;
@@ -139,7 +139,6 @@
     justify-content: center;
     align-items: center;
     padding: 10px;
-    margin-top: 2.1875rem;
     border-radius: 10px;
     border: 2px dashed rgb(171, 202, 255);
     color: #444;
@@ -147,16 +146,16 @@
     transition: background .2s ease-in-out, border .2s ease-in-out;
 }
 
-#modal-body .drop-container:hover {
+#uploadForm .drop-container:hover {
     background: #0872cf;
     border-color: rgba(17, 17, 17, 0.616);
 }
 
-#modal-body .drop-container:hover .drop-title {
+#uploadForm .drop-container:hover .drop-title {
     color: #ffffff;
 }
 
-#modal-body .drop-title {
+#uploadForm .drop-title {
     color: #444;
     font-size: 20px;
     font-weight: bold;
@@ -164,7 +163,7 @@
     transition: color .2s ease-in-out;
 }
 
-#modal-body #file-input {
+#uploadForm #file-input {
     width: 350px;
     max-width: 100%;
     color: #444;
@@ -174,7 +173,7 @@
     border: 1px solid rgba(8, 8, 8, 0.288);
 }
 
-#modal-body #file-input::file-selector-button {
+#uploadForm #file-input::file-selector-button {
     margin-right: 20px;
     border: none;
     background: #0872cf;
@@ -185,7 +184,7 @@
     transition: background .2s ease-in-out;
 }
 
-#modal-body #file-input::file-selector-button:hover {
+#uploadForm #file-input::file-selector-button:hover {
     background: #0872cf;
 }
 #fileTransferCount{

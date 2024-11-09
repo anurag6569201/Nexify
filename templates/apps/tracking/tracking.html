@@ -7,6 +7,7 @@
 {% trans "Profile" %}
 {% endblock head_title %}
 {% block stylesheet %}
+<meta name="csrf-token" content="{{ csrf_token }}">
 <link rel="stylesheet" href="{% static 'assets/css/tracking/tracking.css' %}">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
@@ -20,6 +21,16 @@
     }
     .section_tracking{
         color: rgba(255, 255, 255, 0.761);
+    }
+    .sr-only{
+        display: none;
+    }
+    .sending_another{
+        margin-right: 1rem;
+        border-radius: .4rem !important;
+    }
+    .movement_history{
+        font-size: 12px;
     }
 </style>
 {% endblock stylesheet %}
@@ -61,8 +72,6 @@
         <span class="visually-hidden">Loading...</span>
     </div>
 </div>
-
-<!-- JavaScript for AJAX and Interactions -->
 <script>
     $(document).ready(function () {
         // Show or hide the loading spinner
@@ -86,98 +95,135 @@
 
                     // Helper function to create a card item
                     const createCardItem = (movement, isReceived) => {
-    // Create the basic card for the current file movement
-    let cardHTML = `
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">${movement.file_name}</h5>
-                    <p class="card-text"><strong>${isReceived ? 'Sent by' : 'Received by'}:</strong> ${isReceived ? movement.sender : movement.receiver}</p>
-                    <p class="card-text"><strong>Short Note:</strong> ${movement.short_note || 'N/A'}</p>
-                    <p class="card-text"><strong>Feedback:</strong> ${movement.feedback || 'No feedback yet'}</p>
-                    <p class="card-text"><strong>Status:</strong> ${movement.status}</p>
-                    <p class="card-text"><strong>Date:</strong> ${movement.transfer_date}</p>
-                    <div class="btn-group">
-                        <button class="btn btn-outline-info btn-sm" onclick="sendFileToAnother(${movement.pk_id})">Send to Another</button>
-                        <button class="btn btn-outline-warning btn-sm" onclick="updateStatus(${movement.pk_id})">Update Status</button>
+                        // Create the basic card for the current file movement
+                        let cardHTML = `
+                            <div class="col-md-6 mb-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${movement.file_name}</h5>
+                                        <p class="card-text"><strong>${isReceived ? 'Sent by' : 'Received by'}:</strong> ${isReceived ? movement.sender : movement.receiver}</p>
+                                        <p class="card-text"><strong>Short Note:</strong> ${movement.short_note || 'N/A'}</p>
+                                        <p class="card-text"><strong>Feedback:</strong> ${movement.feedback || 'No feedback yet'}</p>
+                                        <p class="card-text"><strong>Status:</strong> ${movement.status}</p>
+                                        <p class="card-text"><strong>Date:</strong> ${movement.transfer_date}</p>
+                                        
+                                        <!-- Button and Status Dropdown -->
+                                        <div class="btn-group">
+                                            <button class="sending_another btn btn-outline-info btn-sm" onclick="sendFileToAnother(${movement.pk_id})">Send to Another</button>
+
+                                            <!-- Conditional rendering of Status Update Dropdown or Text -->
+                                            <div id="status-update-container_${movement.pk_id}">
+                                                ${isReceived ? `
+                                                    <div class="form-group mb-0">
+                                                        <label for="statusSelect_${movement.pk_id}" class="sr-only">Update Status</label>
+                                                        <select class="form-control form-control-sm" id="statusSelect_${movement.pk_id}" onchange="updateStatus(${movement.pk_id})">
+                                                            <option value="Approved" ${movement.status === 'Approved' ? 'selected' : ''}>Approved</option>
+                                                            <option value="Pending" ${movement.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                                            <option value="Rejected" ${movement.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                                        </select>
+                                                    </div>
+                                                ` : ``}
+                                            </div>
+                                        </div>
+
+
+                                        <hr>
+                                        <h6>Movement History:</h6>
+                                        <ul class="list-group movement_history">
+                        `;
+
+                        // Add the history of this file's movements, if available
+                        if (movement.history && movement.history.length > 0) {
+                            movement.history.forEach(historyItem => {
+                                cardHTML += `
+                                    <li class="list-group-item">
+                                        <strong>${historyItem.status}</strong> on ${historyItem.transfer_date} 
+                                        <br><strong>From:</strong> ${historyItem.sender} <strong>To:</strong> ${historyItem.receiver}
+                                    </li>
+                                `;
+                            });
+                        } else {
+                            cardHTML += `<li class="list-group-item">No history available.</li>`;
+                        }
+
+                        // Close the list and card HTML
+                        cardHTML += `
+                            </ul>
+                        </div>
                     </div>
-                    <hr>
-                    <h6>Movement History:</h6>
-                    <ul class="list-group">
-    `;
-
-    // Add the history of this file's movements, if available
-    if (movement.history && movement.history.length > 0) {
-        movement.history.forEach(historyItem => {
-            cardHTML += `
-                <li class="list-group-item">
-                    <strong>${historyItem.status}</strong> on ${historyItem.transfer_date} 
-                    <br><strong>From:</strong> ${historyItem.sender} <strong>To:</strong> ${historyItem.receiver}
-                </li>
-            `;
-        });
-    } else {
-        cardHTML += `<li class="list-group-item">No history available.</li>`;
-    }
-
-    // Close the list and card HTML
-    cardHTML += `
-                    </ul>
                 </div>
             </div>
-        </div>
-    `;
+        `;
 
-    return cardHTML;
+        return cardHTML;
+    };
+
+    // Populate received files list (two columns per row)
+    if (response.received_files && response.received_files.length > 0) {
+        response.received_files.forEach((movement) => {
+            receivedList.append(createCardItem(movement, true));
+        });
+    } else {
+        receivedList.append('<div class="col-12 text-left">No received file history available.</div>');
+    }
+
+    // Populate sent files list (two columns per row)
+    if (response.sent_files && response.sent_files.length > 0) {
+        response.sent_files.forEach((movement) => {
+            sentList.append(createCardItem(movement, false));
+        });
+    } else {
+        sentList.append('<div class="col-12 text-left">No sent file history available.</div>');
+    }
+
+    showLoadingSpinner(false);
+},
+error: function (xhr, status, error) {
+    console.error('Error fetching tracking details:', error);
+    alert('An error occurred while fetching tracking details. Please try again later.');
+    showLoadingSpinner(false);
+}
+});
+}
+
+// Forward file to another user
+window.sendFileToAnother = function (transferId) {
+    if (confirm('Are you sure you want to forward this file to another user?')) {
+        window.location.href = `send/${transferId}`;
+    }
+};
+window.updateStatus = function (transferId) {
+    const status = $(`#statusSelect_${transferId}`).val(); // Get the selected status value
+
+    // Get CSRF token from the meta tag
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    $.ajax({
+        url: `update-status/${transferId}/`,  // Update with the correct URL
+        type: 'POST',
+        data: {
+            'status': status
+        },
+        headers: {
+            'X-CSRFToken': csrfToken  // Include CSRF token in the header
+        },
+        success: function (response) {
+            alert('Status updated successfully!');
+        },
+        error: function (xhr, status, error) {
+            console.error('Error updating status:', error);
+            alert('An error occurred while updating the status. Please try again.');
+        }
+    });
 };
 
 
-                    // Populate received files list (two columns per row)
-                    if (response.received_files && response.received_files.length > 0) {
-                        response.received_files.forEach((movement) => {
-                            receivedList.append(createCardItem(movement, true));
-                        });
-                    } else {
-                        receivedList.append('<div class="col-12 text-left">No received file history available.</div>');
-                    }
 
-                    // Populate sent files list (two columns per row)
-                    if (response.sent_files && response.sent_files.length > 0) {
-                        response.sent_files.forEach((movement) => {
-                            sentList.append(createCardItem(movement, false));
-                        });
-                    } else {
-                        sentList.append('<div class="col-12 text-left">No sent file history available.</div>');
-                    }
-
-                    showLoadingSpinner(false);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching tracking details:', error);
-                    alert('An error occurred while fetching tracking details. Please try again later.');
-                    showLoadingSpinner(false);
-                }
-            });
-        }
-
-        // Forward file to another user
-        window.sendFileToAnother = function (transferId) {
-            if (confirm('Are you sure you want to forward this file to another user?')) {
-                window.location.href = `send/${transferId}`;
-            }
-        };
-
-        // Update file status
-        window.updateStatus = function (transferId) {
-            if (confirm('Are you sure you want to update the status of this file?')) {
-                window.location.href = "{% url 'tracking:update_transfer_status' 0 %}".replace('0', transferId);
-            }
-        };
-
-        // Fetch tracking details on page load
-        fetchTrackingDetails();
-    });
+// Fetch tracking details on page load
+fetchTrackingDetails();
+});
 </script>
+
 
 <!-- Include Bootstrap Icons CSS for icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">

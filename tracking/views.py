@@ -136,7 +136,6 @@ def received_files(request):
     file_movements = FileMovement.objects.filter(sender=request.user).order_by('-transfer_date')
     return render(request, 'apps/tracking/received_files.html', {'file_movements': file_movements})
 
-
 @login_required
 def update_transfer_status(request, transfer_id):
     try:
@@ -149,6 +148,7 @@ def update_transfer_status(request, transfer_id):
 
         if request.method == 'POST':
             new_status = request.POST.get('status')  # Status passed via POST
+            feedback = request.POST.get('feedback', '')  # Optional feedback
 
             # Validate the new status
             valid_statuses = ['In Progress', 'Received', 'Rejected']
@@ -157,10 +157,20 @@ def update_transfer_status(request, transfer_id):
 
             # Update status and save
             file_movement.status = new_status
+            file_movement.feedback = feedback  # Assuming feedback is an optional field in the model
             file_movement.save()
 
-            # Return success response
-            return JsonResponse({'message': 'Status updated successfully!'})
+            # Return success response with updated file details
+            return JsonResponse({
+                'message': 'Status updated successfully!',
+                'file_name': file_movement.file.name,  # Assuming the model has a file field
+                'created_by': file_movement.created_by.username,  # Assuming created_by is a user object
+                'created_at': file_movement.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                'transfer_chain': [
+                    {'sender': transfer.sender.username, 'receiver': transfer.receiver.username, 'status': transfer.status, 'date': transfer.date.strftime('%Y-%m-%d %H:%M:%S')}
+                    for transfer in FileMovement.objects.filter(file=file_movement.file).order_by('date')
+                ]
+            })
 
         # Return the form to update status
         return render(request, 'apps/tracking/update_status.html', {'file_movement': file_movement})
@@ -208,3 +218,22 @@ def send_to_another_person(request, transfer_id):
         return JsonResponse({'error': 'New receiver not found.'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+def update_status(request, transfer_id):
+    if request.method == 'POST':
+        # Get the new status from the request
+        new_status = request.POST.get('status')
+
+        # Fetch the FileMovement record using the transfer ID
+        file_movement = get_object_or_404(FileMovement, pk=transfer_id)
+
+        # Update the status of the file movement
+        file_movement.status = new_status
+        file_movement.save()
+
+        # Return a success response
+        return JsonResponse({'message': 'Status updated successfully!'}, status=200)
+    else:
+        # If the request method is not POST, return an error response
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)

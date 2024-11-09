@@ -26,7 +26,11 @@ class FileMovement(models.Model):
     sender = models.ForeignKey(User, related_name='sent_files', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_files', on_delete=models.CASCADE)
     short_note = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=50, default='In Progress')  # 'In Progress', 'Received', 'Rejected'
+    status = models.CharField(max_length=40,default="Pending", choices=[
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    ],null=True,blank=True)
     feedback = models.TextField(blank=True, null=True)
     transfer_date = models.DateTimeField(auto_now_add=True)
 

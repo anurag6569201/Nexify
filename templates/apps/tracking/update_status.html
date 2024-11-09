@@ -1,0 +1,112 @@
+{% extends "allauth/layouts/main_base.html" %}
+{% load i18n %}
+{% load static %}
+{% load markdownify %}
+{% load allauth account %}
+{% block head_title %}
+{% trans "Profile" %}
+{% endblock head_title %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'assets/css/tracking/tracking.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{% endblock stylesheet %}
+{% block pages %}
+<section class="col-md-12 section_tracking">
+    <div class="tracking_space container py-4">
+        <div class="container mt-5">
+            <h3 class="text-center mb-4">Update File Transfer Status</h3>
+            
+            <!-- File Details Section -->
+            <div class="file-details">
+                <h4 id="file-name"></h4>
+                <p><strong>Created By:</strong> <span id="file-creator"></span></p>
+                <p><strong>Created At:</strong> <span id="file-created-at"></span></p>
+                <hr>
+        
+                <!-- Transfer Chain Section -->
+                <h5>Transfer Chain</h5>
+                <ul id="transfer-chain" class="list-unstyled"></ul>
+            </div>
+        
+            <hr>
+        
+            <!-- Update Status Form -->
+            <div class="update-status-section">
+                <h4>Update Status</h4>
+                <form id="update-status-form">
+                    <input type="hidden" id="file-id" name="file_id" value="{{ file_id }}">
+                    
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" class="form-control" name="status" required>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feedback">Feedback (optional)</label>
+                        <textarea id="feedback" class="form-control" name="feedback" rows="3"></textarea>
+                    </div>
+        
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </form>
+            </div>
+        
+            <div id="loadingSpinner" class="text-center my-3" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            $(document).ready(function () {
+                // Show loading spinner
+                function showLoadingSpinner(show) {
+                    $('#loadingSpinner').toggle(show);
+                }
+    
+                // Fetch file transfer details and transfer chain
+        
+                // Update file status and feedback
+                $('#update-status-form').submit(function (e) {
+                    e.preventDefault();
+        
+                    var fileId = $('#file-id').val();
+                    var status = $('#status').val();
+                    var feedback = $('#feedback').val();
+        
+                    showLoadingSpinner(true);
+        
+                    $.ajax({
+                        url: `update-status/${fileId}`,
+                        type: 'POST',
+                        data: {
+                            status: status,
+                            feedback: feedback,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            alert('Status updated successfully!');
+                            fetchFileDetails(fileId); // Refresh file details and transfer chain
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error updating status:', error);
+                            alert('Error updating status. Please try again.');
+                            showLoadingSpinner(false);
+                        }
+                    });
+                });
+        
+                // Fetch initial file details
+                var fileId = "{{ file_id }}"; // Get the file ID from Django context or URL
+                fetchFileDetails(fileId);
+            });
+        </script>
+    </div>    
+</section>
+
+{% endblock pages %}

@@ -133,7 +133,11 @@ def club_detail(request, pk_club, pk_branch):
         pending_count = pending_requests.count()
 
         club_members_details=ClubMember.objects.filter(club=club_details)
-        # Prepare context for rendering
+        edit_club_access=0
+        for item in club_members_details:
+            if item.user==request.user:
+                edit_club_access=1
+
         context = {
             'edit_club_access':edit_club_access,
             'user_value':user_value,
@@ -142,6 +146,7 @@ def club_detail(request, pk_club, pk_branch):
             'pk_branch':pk_branch,
             'club_data': club_data,
             'branch_data': branch_data,
+            'edit_club_access':edit_club_access,
             'join_request': join_request ,
             'club_members_details':club_members_details,
             'node_data_array': node_data_array  # Optional: Pass entire array for additional client-side processing
