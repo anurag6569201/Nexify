@@ -1,0 +1,74 @@
+{% load static %}
+<div class="file_space_upload mb-5">
+    <form id="uploadForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <h2 class="form-title text-center">Upload Your File</h2>
+            <p class="form-paragraph text-center">
+                File should be an image or document
+            </p>
+            <div class="col-md-6" style="display: flex; flex-direction: column; justify-content: center;">
+                <div class="mb-3">
+                    <label for="file-input" class="form-label drop-container">
+                        <span class="drop-title">Drop files here or click to upload</span>
+                        <input type="file" name="file" accept="image/*,application/pdf" required id="file-input"
+                            class="form-control">
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6" style="display: flex; flex-direction: column; justify-content: center;">
+                <div class="mb-3">
+                    <input type="text" name="short_note" class="form-control" placeholder="Add a short note (optional)">
+                </div>
+                <div class="mb-3">
+                    <select name="department" class="form-select" required>
+                        <option value="" selected>Select Department</option>
+                        <option value="Administration">Administration</option>
+                        <option value="Academics">Academics</option>
+                        <option value="Finance">Finance</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <select name="receiver" class="form-select" required>
+                        <option value="" selected>Select Receiver</option>
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="button" id="uploadButton" class="btn btn-primary w-100">Upload File</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $('#uploadButton').click(function (e) {
+        e.preventDefault();
+        let formData = new FormData($('#uploadForm')[0]);
+
+        $.ajax({
+            url: "{% url 'tracking:tracking' %}",
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRFToken': $("input[name='csrfmiddlewaretoken']").val(),
+            },
+            success: function (response) {
+                if (response.message) {
+                    alert(response.message);
+                } else {
+                    alert('Upload successful, but no message returned from server.');
+                }
+                $('#uploadForm')[0].reset();
+                fetchTrackingDetails();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error uploading file:', error);
+                alert('Error uploading file. Please try again.');
+            }
+        });
+    });
+</script>

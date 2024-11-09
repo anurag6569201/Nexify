@@ -85,3 +85,114 @@
     <li>{{ descendant.name }}</li>
 {% endfor %}
 </ul>
+
+
+.section_tracking {
+    padding-right: 1rem;
+    border-radius: 1rem;
+    position: relative;
+}
+
+.recive_files_btn{
+    background-color: #0872cf;
+    padding: .3rem .5rem;
+    color: white;
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+}
+.recive_files_btn:hover{
+    background-color: #2982cf;
+    color: white;
+}
+/* From Uiverse.io by Yaya12085 */
+#modal-body .form {
+    background-color: #161c27;
+    box-shadow: 0 4px 20px #0872cf;
+    border: 1px solid rgb(159, 159, 160);
+    border-radius: 20px;
+    padding: 2rem .7rem .7rem .7rem;
+    text-align: center;
+    font-size: 1.125rem;
+    max-width: 100%;
+}
+
+#modal-body .form-title {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+#modal-body .form-paragraph {
+    margin-top: 10px;
+    font-size: 0.9375rem;
+    color: rgb(105, 105, 105);
+}
+
+#modal-body .drop-container {
+    height: 210px;
+    background-color: #5164825f;
+    position: relative;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    margin-top: 2.1875rem;
+    border-radius: 10px;
+    border: 2px dashed rgb(171, 202, 255);
+    color: #444;
+    cursor: pointer;
+    transition: background .2s ease-in-out, border .2s ease-in-out;
+}
+
+#modal-body .drop-container:hover {
+    background: #0872cf;
+    border-color: rgba(17, 17, 17, 0.616);
+}
+
+#modal-body .drop-container:hover .drop-title {
+    color: #ffffff;
+}
+
+#modal-body .drop-title {
+    color: #444;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    transition: color .2s ease-in-out;
+}
+
+#modal-body #file-input {
+    width: 350px;
+    max-width: 100%;
+    color: #444;
+    padding: 2px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid rgba(8, 8, 8, 0.288);
+}
+
+#modal-body #file-input::file-selector-button {
+    margin-right: 20px;
+    border: none;
+    background: #0872cf;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: background .2s ease-in-out;
+}
+
+#modal-body #file-input::file-selector-button:hover {
+    background: #0872cf;
+}
+#fileTransferCount{
+    position: absolute;
+    top: -1em;
+    right: -1em;
+}
+.view_btn_file{
+    position: relative;
+}

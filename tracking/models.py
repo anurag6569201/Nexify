@@ -22,7 +22,7 @@ class FileUpload(models.Model):
 
 
 class FileMovement(models.Model):
-    file = models.ForeignKey('FileUpload', on_delete=models.CASCADE)
+    file = models.ForeignKey('FileUpload', on_delete=models.CASCADE,related_name='file_movements')
     sender = models.ForeignKey(User, related_name='sent_files', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_files', on_delete=models.CASCADE)
     short_note = models.TextField(blank=True, null=True)

@@ -99,5 +99,7 @@
 .file_space_upload #file-input::file-selector-button:hover {
     background: #0872cf;
 }
-
-
+.list-group-item{
+    background-color: #222c3e;
+    color: aliceblue;
+}

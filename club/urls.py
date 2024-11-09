@@ -1,7 +1,7 @@
 from django.urls import path
 from club import views
 from django.views.generic import TemplateView
-
+from tracking import views as track_view
 
 app_name = 'club'
 

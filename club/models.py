@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class ClubData(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='club_data_by_user')
     fixed_json_metadata=models.TextField(default='"class": "go.TreeModel","nodeDataArray":',blank=True,null=True)
     json_data = models.TextField(default='{"class": "go.TreeModel", "nodeDataArray": []}',)
 

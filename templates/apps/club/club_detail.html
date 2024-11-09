@@ -56,13 +56,114 @@
                                 <td class="text-center">{{ club_member_info.role }}</td>
                                 <td class="text-center">{{ club_member_info.power }}</td>
                                 <td class="text-center">
-                                   
-                                </td>
+                                    <a href="#" class="btn btn-info btn-sm" id="sendBtn" data-bs-toggle="modal" data-bs-target="#sendModal" data-receiver-id="{{ club_member_info.user.id }}">
+                                        <i>Send</i>
+                                    </a>                                    
+                                    <a href="#" class="btn btn-success btn-sm view_btn_file">
+                                        <i>View</i>
+                                        {% if club_member_info.user == request.user %}
+                                        <span class="badge bg-warning text-dark" id="fileTransferCount">
+                                            {{ club_member_info.user.received_files.count }}
+                                        </span>
+                                        {% endif %}
+                                    </a>
+                                    <a href="#" class="btn btn-danger btn-sm">
+                                        <i>Forward</i>
+                                    </a>
+                                </td>                                                           
                             </tr>
                             {% endfor %}
                         </tbody>
+                        <script>
+                            $(document).on('click', '#sendBtn', function (e) {
+                                e.preventDefault();
+                                var receiverId = $(this).data('receiver-id');
+                                console.log(receiverId); // This will log the receiverId of the clicked button
+                                $('#receiverInput').val(receiverId); // Assuming you have an input with id="receiverInput"
+                            });
+                        </script>
                     </table>
                 </div>
+                <div class="modal fade" id="sendModal" tabindex="-1" aria-labelledby="sendModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="sendModalLabel">Send Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="uploadForm" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6" style="display: flex; flex-direction: column; justify-content: center;">
+                                            <div class="mb-3">
+                                                <label for="file-input" class="form-label drop-container">
+                                                    <span class="drop-title">Drop files here or click to upload</span>
+                                                    <input type="file" name="file" accept="image/*,application/pdf" required id="file-input"
+                                                        class="form-control">
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" style="display: flex; flex-direction: column; justify-content: center;">
+                                            <div class="mb-3">
+                                                <input type="text" name="short_note" class="form-control" placeholder="Add a short note (optional)">
+                                            </div>
+                                            <div class="mb-3">
+                                                <select name="department" class="form-select" required>
+                                                    <option value="" selected>Select Department</option>
+                                                    <option value="Administration">Administration</option>
+                                                    <option value="Academics">Academics</option>
+                                                    <option value="Finance">Finance</option>
+                                                </select>
+                                            </div>
+                                            <input type="text" name="receiver" id="receiverInput" value="">
+                                            <button type="button" id="uploadButton" class="btn btn-primary w-100">Upload File</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <script>
+                                    
+                                    $('#uploadButton').click(function (e) {
+                                        e.preventDefault();
+                                        let formData = new FormData($('#uploadForm')[0]);
+
+                                        $.ajax({
+                                            url: "{% url 'tracking:tracking' %}",
+                                            type: 'POST',
+                                            data: formData,
+                                            processData: false,
+                                            contentType: false,
+                                            headers: {
+                                                'X-CSRFToken': $("input[name='csrfmiddlewaretoken']").val(),
+                                            },
+                                            success: function (response) {
+                                                if (response.message) {
+                                                    alert(response.message);
+                                                } else {
+                                                    alert('Upload successful, but no message returned from server.');
+                                                }
+                                                $('#uploadForm')[0].reset();
+                                                fetchTrackingDetails();
+                                                $('#sendModal').modal('hide'); 
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.error('Error uploading file:', error);
+                                                alert('Error uploading file. Please try again.');
+                                            }
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+               
+                
                 {% if user_value == edit_club_access %}
                 <div class="member_request_space">
                     <hr>

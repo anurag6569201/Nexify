@@ -9,10 +9,20 @@
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'assets/css/tracking/tracking.css' %}">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .form-select{
+        background-color: #0e151de3;
+        color: rgba(255, 255, 255, 0.761);
+    }
+    textarea.form-control{
+        background-color: #0e151de3;
+        color: rgba(255, 255, 255, 0.761);
+    }
+</style>
 {% endblock stylesheet %}
 {% block pages %}
 
-<section class="col-md-12 section_tracking">
+<section class="col-md-12 section_tracking" style="color: rgba(255, 255, 255, 0.761);;">
     <h2>Send File: {{ file_movement.file.file.name }}</h2>
     <p><strong>Sender:</strong> {{ file_movement.sender.username }}</p>
     <p><strong>Receiver:</strong> {{ file_movement.receiver.username }}</p>

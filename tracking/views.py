@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import FileUpload, FileMovement
@@ -54,13 +54,31 @@ def tracking(request):
 
     # Pass all users to the template
     users = User.objects.all()
-    return render(request, 'apps/tracking/tracking.html', {'users': users})
 
+    return render(request, 'apps/tracking/tracking.html', {'users': users})
 
 @login_required
 def get_tracking_details(request):
-    file_movements = FileMovement.objects.all().order_by('-transfer_date')
-    movements_data = [
+    # Fetch sent files (where the current user is the sender)
+    file_movements_sent = FileMovement.objects.filter(sender=request.user).order_by('-transfer_date')
+
+    # Fetch received files (where the current user is the receiver)
+    file_movements_received = FileMovement.objects.filter(receiver=request.user).order_by('-transfer_date')
+
+    def get_file_history_pk(file_movement):
+        history = []
+        for item in file_movement:
+            file_item_backtrace = get_object_or_404(FileUpload, pk=item.file.pk)
+            for new_item in file_item_backtrace.file_movements.all():
+                history.append(new_item)
+        return history
+    
+    # Get file history data
+    sent_history_data = get_file_history_pk(file_movements_sent)
+    received_history_data = get_file_history_pk(file_movements_received)
+
+    # Prepare data for sent files, including file movement history
+    sent_data = [
         {
             'file_name': movement.file.file.name,
             'sender': movement.sender.username,
@@ -68,18 +86,54 @@ def get_tracking_details(request):
             'short_note': movement.short_note,
             'feedback': movement.feedback if movement.status == 'Received' else 'No feedback yet',
             'status': movement.status,
+            'pk_id': movement.pk,
             'transfer_date': movement.transfer_date.strftime('%d %b %Y, %H:%M'),
+            'history': [
+                {
+                    'file_name': history_item.file.file.name,
+                    'sender': history_item.sender.username,
+                    'receiver': history_item.receiver.username,
+                    'transfer_date': history_item.transfer_date.strftime('%d %b %Y, %H:%M'),
+                    'status': history_item.status,
+                }
+                for history_item in sent_history_data if history_item.file == movement.file
+            ]
         }
-        for movement in file_movements
+        for movement in file_movements_sent
     ]
 
-    return JsonResponse({'movements': movements_data})
+    # Prepare data for received files, including file movement history
+    received_data = [
+        {
+            'file_name': movement.file.file.name,
+            'sender': movement.sender.username,
+            'receiver': movement.receiver.username,
+            'short_note': movement.short_note,
+            'feedback': movement.feedback if movement.status == 'Received' else 'No feedback yet',
+            'status': movement.status,
+            'pk_id': movement.pk,
+            'transfer_date': movement.transfer_date.strftime('%d %b %Y, %H:%M'),
+            'history': [
+                {
+                    'file_name': history_item.file.file.name,
+                    'sender': history_item.sender.username,
+                    'receiver': history_item.receiver.username,
+                    'transfer_date': history_item.transfer_date.strftime('%d %b %Y, %H:%M'),
+                    'status': history_item.status,
+                }
+                for history_item in received_history_data if history_item.file == movement.file
+            ]
+        }
+        for movement in file_movements_received
+    ]
+
+    return JsonResponse({'sent_files': sent_data, 'received_files': received_data})
 
 
 @login_required
 def received_files(request):
     # Retrieve all files received by the logged-in user
-    file_movements = FileMovement.objects.filter(receiver=request.user).order_by('-transfer_date')
+    file_movements = FileMovement.objects.filter(sender=request.user).order_by('-transfer_date')
     return render(request, 'apps/tracking/received_files.html', {'file_movements': file_movements})
 
 
@@ -141,7 +195,8 @@ def send_to_another_person(request, transfer_id):
                 status='In Progress',
             )
 
-            return JsonResponse({'message': 'File sent to the new receiver successfully!'})
+            users = User.objects.all()
+            return render(request, 'apps/tracking/tracking.html', {'users': users})
 
         # Return form to send file to another person
         users = User.objects.exclude(id=request.user.id)  # Exclude current user
