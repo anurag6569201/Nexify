@@ -54,8 +54,8 @@ def tracking(request):
 
     # Pass all users to the template
     users = User.objects.all()
-
-    return render(request, 'apps/tracking/tracking.html', {'users': users})
+    files_list=FileUpload.objects.filter(uploaded_by=request.user).all()
+    return render(request, 'apps/tracking/tracking.html', {'users': users, 'files_list': files_list})
 
 @login_required
 def get_tracking_details(request):

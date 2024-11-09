@@ -32,6 +32,9 @@
     .movement_history{
         font-size: 12px;
     }
+    .btn-group{
+        margin-top: 1rem !important;
+    }
 </style>
 {% endblock stylesheet %}
 {% block pages %}
@@ -42,6 +45,120 @@
             <h4 class="text-left">File Transfer History</h4><hr>
 
             <div class="row">
+                <!-- Files Section -->
+                <div class="col-md-12 mb-2">
+                    <h5 class="text-left ">Files</h5>
+                    <div id="trackingDetails_files" class="col-md-12">
+                        <div class="row" id="trackingList_files">
+                            <style>
+                                /* Container styling */
+                                .file-container {
+                                    margin: 0 auto;
+                                    padding: 2rem;
+                                }
+                            
+                                /* Header styling */
+                                .file-header {
+                                    text-align: center;
+                                    color: #fff;
+                                    margin-bottom: 2rem;
+                                }
+                            
+                                /* Card styling */
+                                .file-card {
+                                    background: #fff;
+                                    border: none;
+                                    border-radius: 15px;
+                                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+                                    transition: transform 0.3s ease;
+                                    overflow: hidden;
+                                }
+                            
+                                /* Hover animation for cards */
+                                .file-card:hover {
+                                    transform: translateY(-10px);
+                                    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+                                }
+                            
+                                /* Card title styling */
+                                .file-card .card-title a {
+                                    color: #ff6f61;
+                                    text-decoration: none;
+                                    font-weight: 500;
+                                }
+                            
+                                .file-card .card-title a:hover {
+                                    color: #ff3d3d;
+                                }
+                            
+                                /* Button styling */
+                                .view-btn {
+                                    border-radius: 20px;
+                                    background: #ff6f61;
+                                    color: #fff;
+                                    transition: background-color 0.3s ease;
+                                }
+                            
+                                .view-btn:hover {
+                                    background: #ff3d3d;
+                                }
+                            
+                                /* Empty list styling */
+                                .no-files-alert {
+                                    background: rgba(255, 255, 255, 0.8);
+                                    color: #333;
+                                    padding: 0;
+                                    border: none;
+                                }
+                            </style>
+                            
+                            <div class="file-container">
+                                <div class="row g-4">
+                                    {% if files_list %}
+                                        {% for file in files_list %}
+                                            <div class="col-md-4 col-lg-4">
+                                                <div class="card file-card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            <a href="{{ file.file.url }}" target="_blank">
+                                                                📄 {{ file.file.name|truncatechars:30 }}
+                                                            </a>
+                                                        </h5>
+                                                        <p class="card-text text-muted mb-1">
+                                                            <strong>Uploaded By:</strong> {{ file.uploaded_by.username }}
+                                                        </p>
+                                                        <p class="card-text text-muted mb-1">
+                                                            <strong>Date:</strong> {{ file.upload_date|date:"d M Y, H:i" }}
+                                                        </p>
+                                                        <p class="card-text text-muted mb-1">
+                                                            <strong>Department:</strong> {{ file.department }}
+                                                        </p>
+                                                        <p class="card-text text-muted">
+                                                            <strong>Note:</strong> {{ file.short_note|default:"No note provided" }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="card-footer text-end">
+                                                        <a href="{{ file.file.url }}" class="btn view-btn btn-sm" target="_blank">
+                                                            View File
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="col-12">
+                                            <div class="alert no-files-alert text-center">
+                                                <h5>There are no files available at the moment!</h5>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <hr>
                 <!-- Received Files Section -->
                 <div class="col-md-12 mb-2">
                     <h5 class="text-left ">Received Files</h5>
@@ -97,63 +214,88 @@
                     const createCardItem = (movement, isReceived) => {
                         // Create the basic card for the current file movement
                         let cardHTML = `
-                            <div class="col-md-6 mb-4">
-                                <div class="card shadow-sm">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${movement.file_name}</h5>
-                                        <p class="card-text"><strong>${isReceived ? 'Sent by' : 'Received by'}:</strong> ${isReceived ? movement.sender : movement.receiver}</p>
-                                        <p class="card-text"><strong>Short Note:</strong> ${movement.short_note || 'N/A'}</p>
-                                        <p class="card-text"><strong>Feedback:</strong> ${movement.feedback || 'No feedback yet'}</p>
-                                        <p class="card-text"><strong>Status:</strong> ${movement.status}</p>
-                                        <p class="card-text"><strong>Date:</strong> ${movement.transfer_date}</p>
-                                        
-                                        <!-- Button and Status Dropdown -->
-                                        <div class="btn-group">
-                                            <button class="sending_another btn btn-outline-info btn-sm" onclick="sendFileToAnother(${movement.pk_id})">Send to Another</button>
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body">
+                <!-- File Name -->
+                <h5 class="card-title text-primary">
+                    <i class="bi bi-file-earmark-text"></i> ${movement.file_name}
+                </h5>
+                
+                <!-- File Details -->
+                <p class="card-text">
+                    <i class="bi bi-person-circle"></i>
+                    <strong>${isReceived ? 'Sent by' : 'Received by'}:</strong> 
+                    ${isReceived ? movement.sender : movement.receiver}
+                </p>
+                <p class="card-text">
+                    <i class="bi bi-sticky"></i>
+                    <strong>Short Note:</strong> ${movement.short_note || '<em>No note provided</em>'}
+                </p>
+                <p class="card-text">
+                    <i class="bi bi-chat-left-text"></i>
+                    <strong>Feedback:</strong> ${movement.feedback || '<em>No feedback yet</em>'}
+                </p>
+                <p class="card-text">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Status:</strong> ${movement.status}
+                </p>
+                <p class="card-text">
+                    <i class="bi bi-calendar-event"></i>
+                    <strong>Date:</strong> ${movement.transfer_date}
+                </p>
 
-                                            <!-- Conditional rendering of Status Update Dropdown or Text -->
-                                            <div id="status-update-container_${movement.pk_id}">
-                                                ${isReceived ? `
-                                                    <div class="form-group mb-0">
-                                                        <label for="statusSelect_${movement.pk_id}" class="sr-only">Update Status</label>
-                                                        <select class="form-control form-control-sm" id="statusSelect_${movement.pk_id}" onchange="updateStatus(${movement.pk_id})">
-                                                            <option value="Approved" ${movement.status === 'Approved' ? 'selected' : ''}>Approved</option>
-                                                            <option value="Pending" ${movement.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                                                            <option value="Rejected" ${movement.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
-                                                        </select>
-                                                    </div>
-                                                ` : ``}
-                                            </div>
-                                        </div>
+                <!-- Action Buttons and Status Update -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-primary btn-sm sending_another" onclick="sendFileToAnother(${movement.pk_id})">
+                        <i class="bi bi-send"></i> Send to Another
+                    </button>
 
-
-                                        <hr>
-                                        <h6>Movement History:</h6>
-                                        <ul class="list-group movement_history">
-                        `;
-
-                        // Add the history of this file's movements, if available
-                        if (movement.history && movement.history.length > 0) {
-                            movement.history.forEach(historyItem => {
-                                cardHTML += `
-                                    <li class="list-group-item">
-                                        <strong>${historyItem.status}</strong> on ${historyItem.transfer_date} 
-                                        <br><strong>From:</strong> ${historyItem.sender} <strong>To:</strong> ${historyItem.receiver}
-                                    </li>
-                                `;
-                            });
-                        } else {
-                            cardHTML += `<li class="list-group-item">No history available.</li>`;
-                        }
-
-                        // Close the list and card HTML
-                        cardHTML += `
-                            </ul>
+                    <!-- Status Update Dropdown (Visible for Received Files Only) -->
+                    ${isReceived ? `
+                        <div id="status-update-container_${movement.pk_id}" class="form-group mb-0">
+                            <select class="form-select form-select-sm" id="statusSelect_${movement.pk_id}" onchange="updateStatus(${movement.pk_id})">
+                                <option value="Approved" ${movement.status === 'Approved' ? 'selected' : ''}>Approved</option>
+                                <option value="Pending" ${movement.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="Rejected" ${movement.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                            </select>
                         </div>
-                    </div>
+                    ` : ''}
                 </div>
-            </div>
+
+                <hr>
+
+                <!-- Movement History -->
+                <h6 class="text-muted"><i class="bi bi-clock-history"></i> Movement History:</h6>
+                <ul class="list-group movement_history">
+`;
+
+// Add movement history if available
+if (movement.history && movement.history.length > 0) {
+    movement.history.forEach(historyItem => {
+        cardHTML += `
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">${historyItem.status}</div>
+                    <small>${historyItem.transfer_date}</small><br>
+                    <i class="bi bi-arrow-right-circle"></i> 
+                    <strong>From:</strong> ${historyItem.sender} <strong>To:</strong> ${historyItem.receiver}
+                </div>
+            </li>
         `;
+    });
+} else {
+    cardHTML += `<li class="list-group-item text-center">No history available.</li>`;
+}
+
+// Close the card HTML
+cardHTML += `
+                </ul>
+            </div>
+        </div>
+    </div>
+`;
+
 
         return cardHTML;
     };

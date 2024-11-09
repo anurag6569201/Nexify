@@ -79,8 +79,6 @@
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
 }
 .profile_recent_activity span,
 .profile_achievements span{
