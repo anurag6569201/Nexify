@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 import json
 from django.http import Http404
-
+from django.contrib.auth.models import User
 
 def get_user_by_pk(serialized_data, pk_value):
     for item in serialized_data:
@@ -104,11 +104,13 @@ def club_detail(request, pk_club, pk_branch):
     club_data_for_pk=ClubData.objects.filter(pk=pk_club)
     serialized_data = json.loads(serialize('json', club_data_for_pk))
     club_owner_pk = get_user_by_pk(serialized_data, pk_club)
-    print("login user: ",login_user_pk)
-    print("club malik: ",club_owner_pk)
 
-    
-
+    owner_organization_users_list = []
+    owner_organization_users = User.objects.all().exclude(pk=request.user.pk)
+    for user in owner_organization_users:
+        domain = user.email.split("@")[1]
+        if domain == request.user.email.split("@")[1]:
+            owner_organization_users_list.append(user)
     try:
         tree_data = json.loads(club_data.json_data)
         
@@ -149,14 +151,31 @@ def club_detail(request, pk_club, pk_branch):
         pending_requests = join_request.filter(status="Pending")
         pending_count = pending_requests.count()
 
+        club_member_list_email = []
         club_members_details=ClubMember.objects.filter(club=club_details)
+
         club_member_user_pk=0
         for item in club_members_details:
+            club_member_list_email.append(item.user.email)
+        
             if item.user==request.user:
                 print(item.user)
                 club_member_user_pk=1
 
+        added_join_request_by_admin_list=[]
+        added_join_request_by_admin=MemberAddingRequests.objects.filter(club_pk=pk_club, branch_pk=pk_branch).all()
+        for item in added_join_request_by_admin:
+            added_join_request_by_admin_list.append(item.email)
+
+
+        print("Added Join Request Emails:", added_join_request_by_admin_list)
+        print("Owner Organization Users List:", [user.email for user in owner_organization_users_list])
+
+
         context = {
+            "added_join_request_by_admin_list":added_join_request_by_admin_list,
+            "club_member_list_email":club_member_list_email,
+            "owner_organization_users_list":owner_organization_users_list,
             'check_requested_join':check_requested_join,
             'club_member_user_pk':club_member_user_pk,
             'login_user_pk':login_user_pk,
@@ -181,7 +200,7 @@ def club_detail(request, pk_club, pk_branch):
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from .models import ClubJoinRequest, ClubData
+from .models import ClubJoinRequest, ClubData,MemberAddingRequests
 
 @csrf_exempt
 @login_required
@@ -247,9 +266,7 @@ def handle_join_request(request):
             join_request = ClubJoinRequest.objects.get(id=request_id)
             club_details = join_request.club  
             club_data_retrive=ClubDetails.objects.get(club_pk=club_details.pk,branch_pk=join_request.branch_pk)
-            print(club_details.pk)
-            print(join_request.branch_pk)
-            print(club_data_retrive)
+
             if action == 'approve':
                 # Update join request status
                 join_request.status = 'Approved'
@@ -282,3 +299,57 @@ def handle_join_request(request):
             return JsonResponse({'error': 'Request not found'}, status=404)
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@login_required
+@csrf_exempt
+def add_join_request(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
+
+        email = data.get('email')
+        club_id = data.get('club_id')
+        branch_pk = data.get('branch_pk')
+
+        # Validate required fields
+        if not email:
+            return JsonResponse({'success': False, 'error': 'Email is required'}, status=400)
+        if not club_id:
+            return JsonResponse({'success': False, 'error': 'Club ID is required'}, status=400)
+        if not branch_pk:
+            return JsonResponse({'success': False, 'error': 'Branch ID is required'}, status=400)
+
+        # Fetch user
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return JsonResponse({'success': False, 'error': 'User not found'}, status=404)
+
+        # Check for existing join requests
+        existing_request = MemberAddingRequests.objects.filter(
+            email=user.email,
+            club_pk=club_id,
+            branch_pk=branch_pk,
+            status__in=['Pending','Approved'],
+        ).exists()
+
+        if existing_request:
+            return JsonResponse({
+                'success': False,
+                'error': 'You already have an active join request for this club and branch.'
+            }, status=400)
+
+        # Create new join request
+        MemberAddingRequests.objects.create(
+            email=user.email,
+            club_pk=club_id,
+            branch_pk=branch_pk,
+            status="Pending"
+        )
+
+        return JsonResponse({'success': True, 'message': 'Join request created successfully!'})
+
+    # If not POST method
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)

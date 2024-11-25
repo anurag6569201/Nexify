@@ -100,3 +100,18 @@ class ClubJoinRequest(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - ({self.status})"
+    
+
+class MemberAddingRequests(models.Model):
+    email = models.CharField(max_length=100)
+    club_pk = models.CharField(max_length=100)
+    branch_pk = models.CharField(max_length=100)
+    status = models.CharField(max_length=20, choices=[
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected')
+    ], default='Pending')
+    request_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - ({self.status})"

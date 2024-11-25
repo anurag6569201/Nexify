@@ -33,7 +33,7 @@ class UserProfileREADME(models.Model):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile_user")
     name = models.CharField(max_length=50,default="John Doe")
     bio = models.CharField(max_length=50,default="Meow meow")
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True,default='../static/assets/img/profile_default/logo.jpeg')
