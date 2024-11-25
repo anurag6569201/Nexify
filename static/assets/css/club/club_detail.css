@@ -46,16 +46,19 @@
     background-color: #161e29;
     color: white;
 }
+#userTable_filter,
 #join-requests-table_filter,
 #invoiceTable_filter{
     width: 100%;
 }
 #join-requests-table_filter label,
+#userTable_filter label,
 #invoiceTable_filter label{
     width: 100%;
     text-align: left;
 }
 #join-requests-table_filter label input,
+#userTable_filter label input,
 #invoiceTable_filter label input{
     width: 300px;
     color: white;
@@ -66,26 +69,6 @@
 .dataTables_length label{
     display: none !important;
 }
-<!-- Display branch info -->
-<h2>{{ branch_data.branch.name }}</h2>
-<p>Title: {{ branch_data.branch.title }}</p>
-
-<!-- Display immediate children -->
-<h3>Direct Children:</h3>
-<ul>
-{% for child in branch_data.children %}
-    <li>{{ child.name }}</li>
-{% endfor %}
-</ul>
-
-<!-- Display all descendants -->
-<h3>All Descendants:</h3>
-<ul>
-{% for descendant in branch_data.descendants %}
-    <li>{{ descendant.name }}</li>
-{% endfor %}
-</ul>
-
 
 .section_tracking {
     padding-right: 1rem;
@@ -194,4 +177,11 @@
 }
 .view_btn_file{
     position: relative;
+}
+
+.add_manually_data{
+    background-color: #161c27;color: white;
+}
+.add_manually_data::placeholder{
+    color: white !important;
 }

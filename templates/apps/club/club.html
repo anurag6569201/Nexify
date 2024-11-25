@@ -286,7 +286,7 @@
         },
         'clickCreatingTool.insertPart': function (loc) {
           // conditional check to only allow double-click if condition is met
-          if ({{edit_club_access}} === {{user_value}}) {
+          if ({{login_user_pk}} === {{club_owner_pk}}) {
             // method override must be function, not =>
             const node = go.ClickCreatingTool.prototype.insertPart.call(this, loc);
             if (node !== null) {
@@ -447,13 +447,13 @@
         selectionObjectName: 'BODY',
         // show/hide buttons when mouse enters/leaves
         mouseEnter: (e, node) => {
-          if ({{edit_club_access}} === {{user_value}}) {
+          if ({{login_user_pk}} === {{club_owner_pk}}) {
             node.findObject('BUTTON').opacity = 1;
             node.findObject('BUTTONX').opacity = 1;
           }
         },
         mouseLeave: (e, node) => {
-          if (node.isSelected && {{edit_club_access}} === {{user_value}}) return; // if selected, don't hide buttons
+          if (node.isSelected && {{login_user_pk}} === {{club_owner_pk}}) return; // if selected, don't hide buttons
           node.findObject('BUTTON').opacity = 0;
           node.findObject('BUTTONX').opacity = 0;
         },
@@ -600,12 +600,12 @@
     name: 'BUTTON',
     opacity: 0, // initially not visible
     click: (e, button) => {
-      if ({{edit_club_access}} === {{user_value}}) {
+      if ({{login_user_pk}} === {{club_owner_pk}}) {
         addEmployee(button.part);
       }
     }
   })
-  .bindObject('opacity', 'isSelected', (s) => (s && edit_club_access === user_value ? 1 : 0))
+  .bindObject('opacity', 'isSelected', (s) => (s && login_user_pk === club_owner_pk ? 1 : 0))
   .add(
     new go.Shape('PlusLine', { width: 15, height: 15, stroke: '#0a0a0a', strokeWidth: 2 })
   ),
@@ -621,7 +621,7 @@
     angle:90,
     opacity: 1, // initially visible
   })
-  .bindObject('opacity', 'isSelected', (s) => (s && edit_club_access === user_value ? 1 : 0))
+  .bindObject('opacity', 'isSelected', (s) => (s && login_user_pk === club_owner_pk ? 1 : 0))
 )
 
         )

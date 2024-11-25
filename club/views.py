@@ -11,6 +11,7 @@ from django.http import Http404
 def get_user_by_pk(serialized_data, pk_value):
     for item in serialized_data:
         if item['pk'] == pk_value:
+            print(item['fields']['user'])
             return item['fields']['user']
     return None 
 
@@ -22,13 +23,13 @@ def club(request,pk):
     serialized_data = json.loads(serialize('json', global_club_data))
 
     form = ClubDataForm(instance=club_data)
-    edit_club_access=request.user.pk
+    login_user_pk=request.user.pk
     pk_value = club_data.pk
-    user_value = get_user_by_pk(serialized_data, pk_value)
-    # print(user_value)
+    club_owner_pk = get_user_by_pk(serialized_data, pk_value)
+    # print(club_owner_pk)
     context = {
-        'edit_club_access':edit_club_access,
-        'user_value':user_value,
+        'login_user_pk':login_user_pk,
+        'club_owner_pk':club_owner_pk,
         'form': form,
         'club_data_pk': club_data.pk,
         'global_club_data': serialized_data,  # Pass serialized data
@@ -98,11 +99,15 @@ def find_branch_by_key(node_data_array, target_key):
     }
 
 def club_detail(request, pk_club, pk_branch):
-    edit_club_access=request.user.pk
+    login_user_pk=request.user.pk
     club_data = get_object_or_404(ClubData, pk=pk_club)
     club_data_for_pk=ClubData.objects.filter(pk=pk_club)
     serialized_data = json.loads(serialize('json', club_data_for_pk))
-    user_value = get_user_by_pk(serialized_data, pk_club)
+    club_owner_pk = get_user_by_pk(serialized_data, pk_club)
+    print("login user: ",login_user_pk)
+    print("club malik: ",club_owner_pk)
+
+    
 
     try:
         tree_data = json.loads(club_data.json_data)
@@ -128,25 +133,39 @@ def club_detail(request, pk_club, pk_branch):
                 'club_description': 'Edit this description for a newly created club.'
             }
         )
+        try:
+            check_requested_join=ClubJoinRequest.objects.filter(
+                user=request.user,
+                club=pk_club,
+                branch_pk=pk_branch,
+                status__in=["Pending"]
+            ).first()
+            print(check_requested_join)
+        except:
+            check_requested_join=None
+            print("none")
+
         join_request = ClubJoinRequest.objects.filter(club=club_data, branch_pk=pk_branch).all()
         pending_requests = join_request.filter(status="Pending")
         pending_count = pending_requests.count()
 
         club_members_details=ClubMember.objects.filter(club=club_details)
-        edit_club_access=0
+        club_member_user_pk=0
         for item in club_members_details:
             if item.user==request.user:
-                edit_club_access=1
+                print(item.user)
+                club_member_user_pk=1
 
         context = {
-            'edit_club_access':edit_club_access,
-            'user_value':user_value,
+            'check_requested_join':check_requested_join,
+            'club_member_user_pk':club_member_user_pk,
+            'login_user_pk':login_user_pk,
+            'club_owner_pk':club_owner_pk,
             'pending_count':pending_count,
             'club_details':club_details,
             'pk_branch':pk_branch,
             'club_data': club_data,
             'branch_data': branch_data,
-            'edit_club_access':edit_club_access,
             'join_request': join_request ,
             'club_members_details':club_members_details,
             'node_data_array': node_data_array  # Optional: Pass entire array for additional client-side processing
@@ -169,25 +188,48 @@ from .models import ClubJoinRequest, ClubData
 def join_club_request(request):
     if request.method == 'POST':
         user = request.user
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
+
         club_id = data.get('club_id')
         branch_pk = data.get('branch_pk')
+
+        # Validate input data
+        if not club_id or not branch_pk:
+            return JsonResponse({'success': False, 'error': 'Club ID and Branch ID are required'}, status=400)
 
         # Check if the club exists
         club = ClubData.objects.filter(pk=club_id).first()
         if not club:
             return JsonResponse({'success': False, 'error': 'Club not found'}, status=404)
 
-        # Check if the user already requested to join this club
-        existing_request = ClubJoinRequest.objects.filter(user=user, club=club, branch_pk=branch_pk).exists()
+        # Check for existing "Pending" or "Approved" requests for the same club and branch
+        existing_request = ClubJoinRequest.objects.filter(
+            user=user,
+            club=club,
+            branch_pk=branch_pk,
+            status__in=["Pending", "Approved"]
+        ).exists()
+
         if existing_request:
-            return JsonResponse({'success': False, 'error': 'Join request already exists'}, status=400)
+            return JsonResponse({
+                'success': False, 
+                'error': 'You already have a join request for this club and branch.'
+            }, status=400)
 
         # Create a new join request
-        ClubJoinRequest.objects.create(user=user, club=club, branch_pk=branch_pk)
+        ClubJoinRequest.objects.create(
+            user=user,
+            club=club,
+            branch_pk=branch_pk,
+            status="Pending"
+        )
+
         return JsonResponse({'success': True})
 
-    return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
