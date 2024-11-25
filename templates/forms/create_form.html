@@ -1,0 +1,88 @@
+{% extends "allauth/layouts/main_base.html" %}
+{% load i18n %}
+{% load static %}
+{% load markdownify %}
+{% load allauth account %}
+{% block head_title %}
+{% trans "Profile" %}
+{% endblock head_title %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'assets/css/forms/create_form.css' %}">
+<style>
+    /* Apply the provided theme */
+    h1 {
+        color: white;
+    }
+    .question-container {
+        background-color: #0c1117;
+        border: 1px solid #a19f9f;
+        border-radius: 1rem;
+        padding: 20px;
+        margin-bottom: 20px;
+        color: rgb(213, 211, 211);
+    }
+    .input-group {
+        margin-bottom: 1em;
+    }
+    .input-group label {
+        color: rgb(213, 211, 211);
+        display: block;
+        margin-bottom: 0.5em;
+    }
+    .input-group input,
+    .input-group select {
+        width: 100%;
+        padding: 0.5em;
+        margin-bottom: 1em;
+        border-radius: 5px;
+        border: 1px solid #a19f9f;
+        background-color: #1b1f26;
+        color: white;
+    }
+    button {
+        border: 1px solid #a19f9f;
+        border-radius: 5px;
+        color: white;
+        background-color: #0c1117;
+        padding: 0.5em 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background-color: #299afd;
+    }
+    .remove-question {
+        color: red;
+        cursor: pointer;
+        border: none;
+        background: none;
+    }
+    .main_container_of_pages{
+        overflow-x: hidden;
+    }
+</style>
+{% endblock stylesheet %}
+{% block pages %}
+
+<section class="section_profile">
+    <div class="row" style="padding: 1rem;padding-top: 0;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6" style="display: flex;align-items: center;justify-content: center;">
+                    <img src="../../static/assets/img/landing/Forms-bro.svg" alt="" style="width: 400px;">
+                </div>
+                <div class="col-md-6">
+                    <h1>Create a New Form</h1>
+                    <form method="post" enctype="multipart/form-data" style="width: 100%;">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Create Form</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock pages %}
+
+

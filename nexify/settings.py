@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'club',
     'event',
     'tracking',
+    'tenders',
 
     'markdownify' #markdown readme
 ]

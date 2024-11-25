@@ -1,0 +1,56 @@
+{% extends 'tenders/base.html' %}
+
+{% block title %}Add Tender and Fields{% endblock %}
+<style>
+    body {
+        background-color: #0c1117;
+        color: rgb(213, 211, 211);
+        font-family: 'Arial', sans-serif;
+        margin: 20px;
+        padding: 0;
+        line-height: 1.6;
+    }
+
+    h2 {
+        color: white;
+        text-align: center;
+    }
+
+    h3 {
+        color: white;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn {
+        background-color: #1abc9c;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #16a085;
+    }
+</style>
+
+
+{% block content %}
+<h2>Add New Tender and Extendable Fields</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h3>Tender Information</h3>
+    {{ form.as_p }}
+
+    <h3>Extendable Fields</h3>
+    {{ tender_field_formset.as_p }}
+
+    <button type="submit" class="btn btn-primary">Create Tender and Field</button>
+</form>
+{% endblock %}

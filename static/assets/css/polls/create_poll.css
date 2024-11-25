@@ -1,0 +1,135 @@
+/* static/css/polls/create_poll.css */
+#poll-form {
+    width: 60%;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    padding: 18px 20px; /* Reduced padding by 10% */
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 1.1em; /* Slightly reduced font size to reduce overall height */
+}
+
+#options-container {
+    margin-bottom: 18px; /* Reduced margin */
+}
+
+.option-input {
+    display: block;
+    margin-bottom: 9px; /* Reduced margin by 10% */
+    width: 100%;
+    padding: 7px; /* Reduced padding by 10% */
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    padding: 9px 18px; /* Reduced padding by 10% */
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 9px; /* Reduced margin by 10% */
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+button[type="button"] {
+    margin-top: 9px; /* Reduced margin */
+}
+
+button[type="submit"] {
+    margin-top: 18px; /* Reduced margin */
+}
+
+button[type="button"]:hover {
+    background-color: #e74c3c;/* static/css/polls/create_poll.css */
+    #poll-form {
+        width: 60%;
+        margin: 0 auto;
+        font-family: Arial, sans-serif;
+        padding: 18px 20px;
+    }
+    
+    h1 {
+        text-align: center;
+        color: #2c3e50;
+        font-size: 1.5em; /* Increased the size for better visibility */
+        margin-bottom: 20px; /* Adds a nice gap between the title and options */
+    }
+    
+    #options-container {
+        margin-bottom: 20px; /* Space between the input options and the button */
+    }
+    
+    .option-input {
+        display: block;
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 7px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    
+    button {
+        background-color: #3498db;
+        color: white;
+        padding: 9px 18px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 9px;
+    }
+    
+    button:hover {
+        background-color: #2980b9;
+    }
+    
+    button[type="button"] {
+        margin-top: 10px;
+    }
+    
+    button[type="submit"] {
+        margin-top: 20px;
+    }
+    
+    button[type="button"]:hover {
+        background-color: #e74c3c;
+    }
+    
+    form {
+        background-color: #f9f9f9;
+        padding: 20px 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+}
+
+form {
+    background-color: #f9f9f9;
+    padding: 18px 20px; /* Reduced padding */
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.title-container{
+
+    padding:10px;
+    padding-left:0px;
+
+}
+.options-container label ,
+.title-container label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}

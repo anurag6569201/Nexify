@@ -1,0 +1,55 @@
+/* static/assets/css/polls/view_poll.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+li {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+li:nth-child(even) {
+    background-color: #ecf0f1;
+}
+
+a {
+    display: inline-block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    font-size: 1.2em;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    background-color: #2980b9;
+}
+
+a:not(:last-child) {
+    margin-right: 10px;
+}

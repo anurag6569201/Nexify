@@ -28,6 +28,7 @@ urlpatterns = [
     path('club/',include('club.urls')),
     path('event/',include('event.urls')),
     path('tracking/',include('tracking.urls')),
+    path('tenders/',include('tenders.urls')),
 ]
 
 if settings.DEBUG:

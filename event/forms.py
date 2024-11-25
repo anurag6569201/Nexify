@@ -1,17 +1,15 @@
 from django import forms
-from .models import Form, Question, Option
+from .models import Form, Question
 
-class FormForm(forms.ModelForm):
+class FormCreateForm(forms.ModelForm):
     class Meta:
         model = Form
-        fields = ['title', 'description']
+        fields = ['form_type','title', 'description', 'image']
 
-class QuestionForm(forms.ModelForm):
+class QuestionCreateForm(forms.ModelForm):
     class Meta:
         model = Question
-        fields = ['text', 'question_type']  # Removed 'form' since it's set in the view
-
-class OptionForm(forms.ModelForm):
-    class Meta:
-        model = Option
-        fields = ['text']  # Removed 'question' since it's set in the view
+        fields = ['form', 'text', 'question_type', 'choices']
+        widgets = {
+            'choices': forms.Textarea(attrs={'placeholder': 'Enter comma-separated choices for multiple-choice questions'}),
+        }

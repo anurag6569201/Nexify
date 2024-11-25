@@ -1,0 +1,35 @@
+{% extends "allauth/layouts/main_base.html" %}
+{% load i18n %}
+{% load static %}
+{% load markdownify %}
+{% load allauth account %}
+{% block head_title %}
+{% trans "Profile" %}
+{% endblock head_title %}
+{% block stylesheet %}
+<style>
+    .section_profile .nav-item{
+        list-style: none;
+    }
+</style>
+
+{% endblock stylesheet %}
+{% block pages %}
+
+<section class="section_profile">
+    <div class="row" style="padding: 1rem;padding-top: 0;">
+
+        <div class="container mt-4">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'tender:tender_list' %}">Tenders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'tender:add_tender' %}">Add Tender</a>
+            </li>
+            {% block content %}{% endblock %}
+        </div>
+        
+    </div>
+</section>
+
+{% endblock pages %}

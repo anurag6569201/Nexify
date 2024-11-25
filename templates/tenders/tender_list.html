@@ -1,0 +1,60 @@
+{% extends 'tenders/base.html' %}
+
+{% block title %}Tenders List{% endblock %}
+
+{% block content %}
+<!-- Include DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<!-- Include jQuery (required for DataTables) -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- Include DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<style>
+    #tenderTable td,
+    #tenderTable th{
+        background-color: transparent !important;
+        color: white !important;
+    }
+</style>
+<h2 style="color: white;">Tender List</h2>
+<table id="tenderTable" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tender Name</th>
+            <th>Tender ID</th>
+            <th>End Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tender in tenders %}
+            <tr>
+                <td>{{ tender.tender_name }}</td>
+                <td>{{ tender.tender_id }}</td>
+                <td>{{ tender.end_date }}</td>
+                <td>
+                    <a href="{% url 'tender_detail' tender.id %}" class="btn btn-primary btn-sm">View</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    $(document).ready(function() {
+        $('#tenderTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "responsive": true,
+            "language": {
+                "search": "Filter records:",
+                "lengthMenu": "Display _MENU_ tenders per page",
+                "info": "Showing _START_ to _END_ of _TOTAL_ tenders"
+            }
+        });
+    });
+</script>
+
+{% endblock %}

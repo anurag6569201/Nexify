@@ -55,6 +55,7 @@
                                 .file-container {
                                     margin: 0 auto;
                                     padding: 2rem;
+                                    color: #e7e4e4;
                                 }
                             
                                 /* Header styling */
@@ -66,12 +67,13 @@
                             
                                 /* Card styling */
                                 .file-card {
-                                    background: #fff;
+                                    background: #222c3e;
                                     border: none;
                                     border-radius: 15px;
                                     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
                                     transition: transform 0.3s ease;
                                     overflow: hidden;
+                                    color: #e7e4e4 !important;
                                 }
                             
                                 /* Hover animation for cards */
@@ -106,7 +108,7 @@
                                 /* Empty list styling */
                                 .no-files-alert {
                                     background: rgba(255, 255, 255, 0.8);
-                                    color: #333;
+                                    color: #e7e4e4;
                                     padding: 0;
                                     border: none;
                                 }
@@ -124,16 +126,16 @@
                                                                 📄 {{ file.file.name|truncatechars:30 }}
                                                             </a>
                                                         </h5>
-                                                        <p class="card-text text-muted mb-1">
+                                                        <p class="card-text  mb-1">
                                                             <strong>Uploaded By:</strong> {{ file.uploaded_by.username }}
                                                         </p>
-                                                        <p class="card-text text-muted mb-1">
+                                                        <p class="card-text  mb-1">
                                                             <strong>Date:</strong> {{ file.upload_date|date:"d M Y, H:i" }}
                                                         </p>
-                                                        <p class="card-text text-muted mb-1">
+                                                        <p class="card-text  mb-1">
                                                             <strong>Department:</strong> {{ file.department }}
                                                         </p>
-                                                        <p class="card-text text-muted">
+                                                        <p class="card-text ">
                                                             <strong>Note:</strong> {{ file.short_note|default:"No note provided" }}
                                                         </p>
                                                     </div>
@@ -266,7 +268,7 @@
                 <hr>
 
                 <!-- Movement History -->
-                <h6 class="text-muted"><i class="bi bi-clock-history"></i> Movement History:</h6>
+                <h6 class=""><i class="bi bi-clock-history"></i> Movement History:</h6>
                 <ul class="list-group movement_history">
 `;
 
