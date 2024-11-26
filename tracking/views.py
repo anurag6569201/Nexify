@@ -237,3 +237,4 @@ def update_status(request, transfer_id):
     else:
         # If the request method is not POST, return an error response
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+    

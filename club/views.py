@@ -163,13 +163,9 @@ def club_detail(request, pk_club, pk_branch):
                 club_member_user_pk=1
 
         added_join_request_by_admin_list=[]
-        added_join_request_by_admin=MemberAddingRequests.objects.filter(club_pk=pk_club, branch_pk=pk_branch).all()
+        added_join_request_by_admin=MemberAddingRequests.objects.filter(club_pk=pk_club, branch_pk=pk_branch,status__in=['Pending','Approved']).all()
         for item in added_join_request_by_admin:
             added_join_request_by_admin_list.append(item.email)
-
-
-        print("Added Join Request Emails:", added_join_request_by_admin_list)
-        print("Owner Organization Users List:", [user.email for user in owner_organization_users_list])
 
 
         context = {

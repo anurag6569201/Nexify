@@ -76,13 +76,78 @@
             </p>
             <hr>
             <p>
-                <h4 style="color: rgb(213, 211, 211);">Recent Activity</h4>
+                <h4 style="color: rgb(213, 211, 211);">Recent Invitation</h4>
                 <div class="profile_achievements">
-                    <!-- <div class="profile_recent_activity">
-                        <span></span>
-                        <p>Tech Society <br>D3 Web</p>
-                    </div> -->
-                    <h6 style="padding: 0;margin: 0;color: rgb(188, 186, 186);">No recent activity to show!</h6>
+                    {% if combined_data %}
+                    {% for item in combined_data %}
+                    <div class="profile_recent_activity">
+                        <!-- Club Thumbnail -->
+                        <span style="overflow: hidden;">
+                            <img src="{{ item.club_detail.logo_image.url }}" alt="Club Logo">
+                        </span>
+                        <p style="margin-top: .5rem;">
+                            <!-- Buttons to trigger modals -->
+                            <button class="Invitation_accept_btn" data-bs-toggle="modal" data-bs-target="#clubDetailModal{{ forloop.counter }}">
+                                <i data-feather="info"></i>
+                            </button>
+                            <button class="Invitation_accept_btn" data-bs-toggle="modal" data-bs-target="#actionModal{{ forloop.counter }}">
+                                <i data-feather="check-circle"></i>
+                            </button>
+                        </p>
+                    </div>
+                    
+                    <!-- Club Detail Modal -->
+                    <div class="modal fade" id="clubDetailModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="clubDetailModalLabel{{ forloop.counter }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background-color: #0c1117;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-light" id="clubDetailModalLabel{{ forloop.counter }}">{{ item.club_detail.club_name }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="model_requested_club_detail">
+                                        <img src="{{ item.club_detail.background_image.url }}" alt="Background Image" class="img-fluid model_requested_club_detail_background">
+                                        <img src="{{ item.club_detail.logo_image.url }}" alt="Background Image" class="img-fluid model_requested_club_detail_logo">
+                                    </div>
+                                    <p><strong>Description:</strong> {{ item.club_detail.club_description }}</p>
+                                    <p><strong>Subtext:</strong> {{ item.club_detail.club_subtext }}</p>
+                                    <p><strong>Created At:</strong> {{ item.club_detail.created_at }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Modal -->
+                    <div class="modal fade" id="actionModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="actionModalLabel{{ forloop.counter }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background-color: #0c1117;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-light" id="actionModalLabel{{ forloop.counter }}">Respond to Invitation</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Do you want to accept or reject the invitation to join <strong>{{ item.club_detail.club_name }}</strong>?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form method="POST" action="{% url 'home:respond_to_invitation' item.member.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="club_pk" value="{{ item.club_detail.club_pk }}">
+                                        <input type="hidden" name="branch_pk" value="{{ item.club_detail.branch_pk }}">
+                                        <button type="submit" name="response" value="accept" class="btn btn-success">Accept</button>
+                                        <button type="submit" name="response" value="reject" class="btn btn-danger">Reject</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}                    
+                    {% else %}
+                        <p>No pending invitations.</p>
+                    {% endif %}
+                
                 </div>
             </p>
             <hr>
