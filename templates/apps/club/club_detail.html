@@ -27,7 +27,7 @@
                     <span><b style="font-size: x-large;">{{ club_details.club_name }}</b><br>
                         {{ club_details.club_subtext }} <br>
                     </span>
-                    {% if check_requested_join %}
+                    {% if check_requested_join or check_member_requested_join %}
                     <span>
                         <button class="btn btn-outline-info btn-sm" >Requested</button>
                     </span>
@@ -129,10 +129,52 @@
                                             <h6>Add by Email</h6>
                                             <form id="addByEmailForm">
                                                 <div class="mb-3">
-                                                    <input type="email" class="form-control add_manually_data" id="emailInput" placeholder="Enter Email" required>
+                                                    <input type="hidden" name="club_id" value="{{ club_data.pk }}">
+                                                    <input type="hidden" name="branch_pk" value="{{ pk_branch }}">
+                                            
+                                                    <label for="emailInput" class="form-label">Enter Email</label>
+                                                    <input type="email" class="form-control add_manually_data" id="emailInput" name="email"
+                                                        placeholder="Enter Email" required>
                                                 </div>
                                                 <button type="submit" class="btn btn-primary">Add</button>
                                             </form>
+                                            <script>
+                                                document.getElementById('addByEmailForm').addEventListener('submit', function (event) {
+                                                    event.preventDefault(); // Prevent the default form submission
+
+                                                    // Collect form data
+                                                    const email = document.getElementById('emailInput').value;
+                                                    const club_id = document.querySelector('input[name="club_id"]').value;
+                                                    const branch_pk = document.querySelector('input[name="branch_pk"]').value;
+                                                    const csrfToken = '{{ csrf_token }}';
+
+                                                    // Create the AJAX request
+                                                    fetch("{% url 'club:add_join_request_by_email' %}", {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'Content-Type': 'application/json',
+                                                            "X-CSRFToken": csrfToken
+                                                        },
+                                                        body: JSON.stringify({
+                                                            email: email,
+                                                            club_id: club_id,
+                                                            branch_pk: branch_pk
+                                                        })
+                                                    })
+                                                        .then(response => response.json())
+                                                        .then(data => {
+                                                            if (data.success) {
+                                                                alert(data.message); // Success message
+                                                            } else {
+                                                                alert(`Error: ${data.error}`); // Error message
+                                                            }
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Error:', error);
+                                                            alert('An error occurred. Please try again.');
+                                                        });
+                                                });
+                                            </script>
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +188,11 @@
                             });
                         </script>
                         {% else %}
-                            <button class="btn btn-outline-info btn-sm" id="join-club-btn">Join Club</button>
+                            {% if request.user.email in club_member_list_email %}
+                                <button class="btn btn-outline-info btn-sm">Joined</button>
+                            {% else %}
+                                <button class="btn btn-outline-info btn-sm" id="join-club-btn">Join Club</button>
+                            {% endif %}
                         {% endif %}
                     </span>
                     {% endif %}

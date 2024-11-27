@@ -142,10 +142,15 @@ def club_detail(request, pk_club, pk_branch):
                 branch_pk=pk_branch,
                 status__in=["Pending"]
             ).first()
-            print(check_requested_join)
+            check_member_requested_join=MemberAddingRequests.objects.filter(
+                email=request.user.email,
+                club_pk=pk_club,
+                branch_pk=pk_branch,
+                status__in=["Pending"]
+            ).first()
         except:
             check_requested_join=None
-            print("none")
+            check_member_requested_join=None
 
         join_request = ClubJoinRequest.objects.filter(club=club_data, branch_pk=pk_branch).all()
         pending_requests = join_request.filter(status="Pending")
@@ -167,12 +172,16 @@ def club_detail(request, pk_club, pk_branch):
         for item in added_join_request_by_admin:
             added_join_request_by_admin_list.append(item.email)
 
+        print(request.user.email)
 
+        print(club_member_list_email)
+        
         context = {
             "added_join_request_by_admin_list":added_join_request_by_admin_list,
             "club_member_list_email":club_member_list_email,
             "owner_organization_users_list":owner_organization_users_list,
             'check_requested_join':check_requested_join,
+            'check_member_requested_join':check_member_requested_join,
             'club_member_user_pk':club_member_user_pk,
             'login_user_pk':login_user_pk,
             'club_owner_pk':club_owner_pk,
@@ -346,6 +355,100 @@ def add_join_request(request):
         )
 
         return JsonResponse({'success': True, 'message': 'Join request created successfully!'})
+
+    # If not POST method
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
+
+
+
+
+
+
+
+
+
+
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+import json
+
+@login_required
+@csrf_exempt
+def add_join_request_by_email(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
+
+        email = data.get('email')
+        club_id = data.get('club_id')
+        branch_pk = data.get('branch_pk')
+
+        # Validate required fields
+        if not email:
+            return JsonResponse({'success': False, 'error': 'Email is required'}, status=400)
+        if not club_id:
+            return JsonResponse({'success': False, 'error': 'Club ID is required'}, status=400)
+        if not branch_pk:
+            return JsonResponse({'success': False, 'error': 'Branch ID is required'}, status=400)
+
+        # Fetch user by email
+        user = User.objects.filter(email=email).first()
+
+        if user:
+            # Check for existing join requests
+            existing_request = MemberAddingRequests.objects.filter(
+                email=user.email,
+                club_pk=club_id,
+                branch_pk=branch_pk,
+                status__in=['Pending', 'Approved'],
+            ).exists()
+
+            if existing_request:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'An active join request for this club and branch already exists.'
+                }, status=400)
+
+            # Create a new join request
+            MemberAddingRequests.objects.create(
+                email=user.email,
+                club_pk=club_id,
+                branch_pk=branch_pk,
+                status="Pending"
+            )
+
+            return JsonResponse({'success': True, 'message': 'Join request created successfully!'})
+        else:
+            # If user doesn't exist, send an invitation email
+            subject = "Invitation to Join Our Club"
+            html_message = render_to_string('apps/emails/join_invitation.html', {
+                'email': email,
+                'club_id': club_id,
+                'branch_pk': branch_pk,
+            })
+            plain_message = strip_tags(html_message)
+            from_email = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [email]
+
+            try:
+                send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
+            except Exception as e:
+                return JsonResponse({'success': False, 'error': 'Failed to send invitation email.'}, status=500)
+
+            # Also create a join request for the non-existing user
+            MemberAddingRequests.objects.create(
+                email=email,
+                club_pk=club_id,
+                branch_pk=branch_pk,
+                status="Pending"
+            )
+
+            return JsonResponse({'success': True, 'message': 'Invitation sent and join request created successfully!'})
 
     # If not POST method
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
