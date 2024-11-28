@@ -14,4 +14,7 @@ urlpatterns = [
     path('handle-join-request/', views.handle_join_request, name='handle_join_request'),
     path('add-join-request/', views.add_join_request, name='add_join_request'),
     path('add-join-request-by-email/', views.add_join_request_by_email, name='add_join_request_by_email'),
+
+    path('update_member/', views.update_member, name='update_member'),
+    path('delete_member/', views.delete_member, name='delete_member'),
 ]

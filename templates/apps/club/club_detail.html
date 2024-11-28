@@ -222,33 +222,26 @@
                                 <td class="text-center">{{ club_member_info.power }}</td>
                                 <td class="text-center">
                                     {% if login_user_pk %}
-                                    <a href="#" class="btn btn-info btn-sm" id="sendBtn" data-bs-toggle="modal" data-bs-target="#sendModal" data-receiver-id="{{ club_member_info.user.id }}">
-                                        <i>Send</i>
+                                    <a href="#" class="btn btn-info btn-sm sendbtn" id="sendBtn" data-bs-toggle="modal" data-bs-target="#sendModal" data-receiver-id="{{ club_member_info.user.id }}">
+                                        <i data-feather="send">Send</i>
                                     </a>     
                                     {% else %}
-                                    <a href="#" class="btn btn-info btn-sm" style="opacity: .6;pointer-events: none;" id="" data-bs-toggle="modal" data-bs-target="" data-receiver-id="">
-                                        <i>Send</i>
+                                    <a href="#" class="btn btn-info btn-sm sendbtn" style="opacity: .6;pointer-events: none;" id="" data-bs-toggle="modal" data-bs-target="" data-receiver-id="">
+                                        <i data-feather="send">Send</i>
                                     </a>  
                                     {% endif %}
-                                    {% if club_member_info.user == request.user %}
-                                    <a href="{% url 'tracking:tracking' %}" class="btn btn-success btn-sm view_btn_file">
-                                        <i>View</i>
-                                        {% if club_member_info.user == request.user %}
-                                        <span class="badge bg-warning text-dark" id="fileTransferCount">
-                                            {{ club_member_info.user.received_files.count }}
-                                        </span>
+                                    <!-- Edit Button Logic: Users can only edit those with lesser power -->
+                                    {% if request.user.email in club_edit_access or club_owner_pk == request.user.pk %}
+                                        {% if club_member_info.power < club_members_detail_of_active_user.power or club_owner_pk == request.user.pk %}
+                                        <a class="btn btn-info btn-sm editbtn" id="editBtn" data-bs-toggle="modal" data-bs-target="#editModal" data-receiver-id="{{ club_member_info.pk }}">
+                                            <i data-feather="edit">Edit</i>
+                                        </a>
+                                        <a class="btn btn-info btn-sm removebtn" data-receiver-id="{{ club_member_info.pk }}">
+                                            <i data-feather="trash"></i>
+                                        </a>                                        
                                         {% endif %}
-                                    </a>
-                                    {% else %}
-                                    <a href=""  style="opacity: .6;pointer-events: none;" class="btn btn-success btn-sm view_btn_file">
-                                        <i>View</i>
-                                        {% if club_member_info.user == request.user %}
-                                        <span class="badge bg-warning text-dark" id="fileTransferCount">
-                                            {{ club_member_info.user.received_files.count }}
-                                        </span>
-                                        {% endif %}
-                                    </a>
                                     {% endif %}
+                                    
                                 </td>                                                           
                             </tr>
                             {% endfor %}
@@ -261,11 +254,118 @@
                                 $('#receiverInput').val(receiverId); // Assuming you have an input with id="receiverInput"
                             });
                         </script>
+                        <script>
+                            $('.removebtn').click(function (e) {
+                                e.preventDefault();
+                                var memberId = $(this).data('receiver-id'); // Get member ID from data attribute
+                        
+                                // Confirm deletion
+                                if (!confirm("Are you sure you want to delete this member?")) {
+                                    return;
+                                }
+                        
+                                // Make AJAX request
+                                $.ajax({
+                                    url: "{% url 'club:delete_member' %}",
+                                    type: 'POST',
+                                    data: JSON.stringify({ 'id': memberId }),
+                                    contentType: 'application/json',
+                                    headers: {
+                                        'X-CSRFToken': $("input[name='csrfmiddlewaretoken']").val(),
+                                    },
+                                    success: function (response) {
+                                        if (response.success) {
+                                            // Optionally, remove the row or refresh the page
+                                            location.reload();
+                                        } else {
+                                            alert(response.message || 'An error occurred while deleting the user.');
+                                        }
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error('Error removing user:', error);
+                                        alert('Error removing user. Please try again.');
+                                    }
+                                });
+                            });
+                        </script>                        
                     </table>
                 </div>
+                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" style="background-color: #161c27;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Edit Member</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editForm">
+                                    <input type="hidden" id="memberId" name="id">
+                                    <div class="mb-3">
+                                        <label for="role" class="form-label">Role</label>
+                                        <select id="role" name="role" class="form-select" style="background-color: #161c2746;color: white;">
+                                            <option value="Head">Head</option>
+                                            <option value="Vice President">Vice President</option>
+                                            <option value="Secretary">Secretary</option>
+                                            <option value="HOD">HOD</option>
+                                            <option value="Associate Professor">Associate Professor</option>
+                                            <option value="Member">Member</option>
+                                        </select>                                                
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="power" class="form-label">Power</label>
+                                        <hgroup style="font-size: 10px;opacity: .6;"><i>"" Higher then 50 power can manage the group members and activity ""</i></hgroup>
+                                        <input type="number" id="power" name="power" class="form-control" style="background-color: #161c2746;color: white;">
+                                    </div>
+                                    <button type="submit" class="btn btn-info">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    $(document).on('click', '[data-bs-toggle="modal"]', function () {
+                            var memberId = $(this).data('receiver-id');
+                            var memberRole = $(this).data('role');
+                            var memberPower = $(this).data('power');
+
+                            // Populate the modal wit member data
+                            $('#editModal #memberId').val(memberId);
+                            $('#editModal #role').val(memberRole);
+                            $('#editModal #power').val(memberPower);
+                        });
+
+                        $('#editForm').on('submit', function (event) {
+                            event.preventDefault(); // Prevent the form from submitting normally
+                            var formData = $(this).serialize(); // Serialize the form data
+
+                            $.ajax({
+                                url: "{% url 'club:update_member' %}",  // Your view URL to handle the update
+                                method: 'POST',
+                                data: formData,
+                                headers: {
+                                    'X-CSRFToken': $("input[name='csrfmiddlewaretoken']").val(),
+                                },
+                                success: function (response) {
+                                    // Close the modal and show a success message
+                                    $('#editModal').modal('hide');
+                                    alert('Member updated successfully!');
+
+                                    // Optionally, update the UI without refreshing the page
+                                    // For example, update the role and power of the member in the list
+                                    $('#member_' + response.id + ' .role').text(response.role);
+                                    $('#member_' + response.id + ' .power').text(response.power);
+                                },
+                                error: function (error) {
+                                    console.error('Error updating member:', error);
+                                    alert('An error occurred while updating the member.');
+                                }
+                            });
+                        });
+
+                </script>
                 <div class="modal fade" id="sendModal" tabindex="-1" aria-labelledby="sendModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content" style="background-color: #161c27;">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="sendModalLabel">Send Information</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -284,11 +384,16 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12" style="display: flex; flex-direction: column; justify-content: center;">
-                                            <div class="mb-3">
-                                                <input type="text" name="short_note" class="form-control" placeholder="Add a short note (optional)">
+                                            <style>
+                                                .short_note_input input::placeholder{
+                                                    color: white;
+                                                }
+                                            </style>
+                                            <div class="mb-3 short_note_input">
+                                                <input style="background-color: #161c27;color: white;" type="text" name="short_note" class="form-control" placeholder="Add a short note (optional)">
                                             </div>
                                             <div class="mb-3">
-                                                <select name="department" class="form-select" required>
+                                                <select name="department" class="form-select" required  style="background-color: #161c27;color: white;">
                                                     <option value="" selected>Select Department</option>
                                                     <option value="Department">Department</option>
                                                     <option value="Academics">Academics</option>

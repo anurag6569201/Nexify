@@ -159,23 +159,31 @@ def club_detail(request, pk_club, pk_branch):
         club_member_list_email = []
         club_members_details=ClubMember.objects.filter(club=club_details)
 
+        try:
+            club_members_detail_of_active_user=ClubMember.objects.filter(club=club_details,user=request.user).first()
+        except:
+            club_members_detail_of_active_user=None
+
+
         club_member_user_pk=0
+        club_edit_access=[request.user.email,]
         for item in club_members_details:
             club_member_list_email.append(item.user.email)
-        
+            if item.power >= 50:
+                # Add users with power 50 or above to the edit access list
+                if item.user != request.user:  # Don't let users edit their own role
+                    club_edit_access.append(item.user.email)
+
             if item.user==request.user:
-                print(item.user)
                 club_member_user_pk=1
+        print(club_edit_access)
+
 
         added_join_request_by_admin_list=[]
         added_join_request_by_admin=MemberAddingRequests.objects.filter(club_pk=pk_club, branch_pk=pk_branch,status__in=['Pending','Approved']).all()
         for item in added_join_request_by_admin:
             added_join_request_by_admin_list.append(item.email)
 
-        print(request.user.email)
-
-        print(club_member_list_email)
-        
         context = {
             "added_join_request_by_admin_list":added_join_request_by_admin_list,
             "club_member_list_email":club_member_list_email,
@@ -184,6 +192,7 @@ def club_detail(request, pk_club, pk_branch):
             'check_member_requested_join':check_member_requested_join,
             'club_member_user_pk':club_member_user_pk,
             'login_user_pk':login_user_pk,
+            'club_members_detail_of_active_user':club_members_detail_of_active_user,
             'club_owner_pk':club_owner_pk,
             'pending_count':pending_count,
             'club_details':club_details,
@@ -191,6 +200,7 @@ def club_detail(request, pk_club, pk_branch):
             'club_data': club_data,
             'branch_data': branch_data,
             'join_request': join_request ,
+            'club_edit_access':club_edit_access,
             'club_members_details':club_members_details,
             'node_data_array': node_data_array  # Optional: Pass entire array for additional client-side processing
         }
@@ -452,3 +462,44 @@ def add_join_request_by_email(request):
 
     # If not POST method
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
+
+
+def update_member(request):
+    if request.method == 'POST':
+        member_id = request.POST.get('id')
+        role = request.POST.get('role')
+        power = request.POST.get('power')
+        is_joined = 'is_joined' in request.POST
+        
+        member = ClubMember.objects.get(id=member_id)
+        print(member)
+        member.role = role
+        member.power = power
+        member.is_joined = is_joined
+        member.save()
+
+        data = {
+            'id': member.id,
+            'role': member.role,
+            'power': member.power,
+            'is_joined': member.is_joined,
+        }
+        return JsonResponse(data)
+    
+
+@csrf_exempt
+def delete_member(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            member_id = data.get('id')
+            if not member_id:
+                return JsonResponse({'success': False, 'message': 'Member ID is required.'}, status=400)
+
+            member = get_object_or_404(ClubMember, id=member_id)
+            member.delete()
+            return JsonResponse({'success': True, 'message': 'Member deleted successfully.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=405)

@@ -185,3 +185,10 @@
 .add_manually_data::placeholder{
     color: white !important;
 }
+.removebtn svg,
+.editbtn svg,
+.sendbtn svg{
+    width: 14px !important;
+    height: 14px !important;
+    color: white !important;
+}
